@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "NODE_OPTIONS='-r next-logger' next dev",
     "build": "next build",
-    "start": "NODE_OPTIONS='-r next-logger' next start",
+    "start": "NODE_OPTIONS='-r next-logger' NEXT_MANUAL_SIG_HANDLE=true next start",
     "lint": "next lint"
   },
   "dependencies": {
