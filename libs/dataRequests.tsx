@@ -49,6 +49,24 @@ const getDataset = async (id: string) => {
   return data;
 };
 
+const getDatasetWithSpatialCoverageInfo = async (id: string) => {
+  // this function gets the dataset like normal then adds a new field 'spatial_coverage_name' to it
+  // which is the corresponding name of the given coverage code
+  // e.g. K02000001 -> United Kingdom
+  const data = await fetchData(`/datasets/${id}`, "GET");
+  const code = data.spatial_coverage;
+
+  const response = await handleResponse(
+    await fetch(`https://findthatpostcode.uk/areas/${code}.json`)
+  );
+
+  const coverage = response.data.attributes.name;
+
+  data.spatial_coverage_name = coverage;
+
+  return data;
+};
+
 const getTopics = async () => {
   const data = await fetchData(`/topics`, "GET");
   return data;
@@ -59,4 +77,10 @@ const getPublishers = async () => {
   return data;
 };
 
-export { getDatasets, getDataset, getTopics, getPublishers };
+export {
+  getDatasets,
+  getDataset,
+  getDatasetWithSpatialCoverageInfo,
+  getTopics,
+  getPublishers,
+};
