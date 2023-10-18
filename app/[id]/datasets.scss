@@ -53,3 +53,31 @@
   @include govuk-font($size: 16);
   margin-bottom: 8px;
 }
+
+.app-datasets__publisher {
+  align-items: flex-start;
+  display: flex;
+  flex: 0 0 auto;
+  height: min-content;
+  overflow: visible;
+
+  flex-flow: column;
+  gap: govuk-spacing(2);
+
+  padding: 0px 0px 0px govuk-spacing(3);
+  margin-bottom: govuk-spacing(4);
+  position: relative;
+
+  border-color: govuk-colour("blue");
+  border-style: solid;
+  border-width: 0px 0px 0px 5px;
+}
+
+.app-datasets__publisher-text {
+  @include govuk-font($size: 19);
+  letter-spacing: 0px;
+  margin-top: govuk-spacing(0);
+  margin-bottom: govuk-spacing(0);
+
+  font-family: "Helvetica Neue";
+}
