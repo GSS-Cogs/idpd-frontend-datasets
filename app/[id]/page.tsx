@@ -4,9 +4,8 @@ import PhaseBanner from "@/components/PhaseBanner";
 import { getDatasetWithSpatialCoverageInfo } from "../../libs/dataRequests";
 import Image from "next/image";
 
-export default async function Datasets({}: {}) {
-  const dataset = await getDatasetWithSpatialCoverageInfo("cpih");
-
+export default async function Datasets({ params }: { params: { id: string } }) {
+  const dataset = await getDatasetWithSpatialCoverageInfo(params.id);
   function formatDate(date: string) {
     const d = new Date(date);
     const options: Intl.DateTimeFormatOptions = {
@@ -125,7 +124,7 @@ export default async function Datasets({}: {}) {
                         borderBottomWidth: 0,
                       }}
                     >
-                      {formatDate(dataset.release_date)}
+                      {formatDate(dataset.issued)}
                     </td>
                   </tr>
                   <tr className="govuk-table__row">
@@ -144,7 +143,7 @@ export default async function Datasets({}: {}) {
                         borderBottomWidth: 0,
                       }}
                     >
-                      Thursday, 4 May 2023
+                      {formatDate(dataset.next_release)}
                     </td>
                   </tr>
                   <tr className="govuk-table__row">
@@ -172,11 +171,11 @@ export default async function Datasets({}: {}) {
               <div>
                 <h3 className="govuk-heading-s">Topics and subtopics</h3>
 
-                {dataset.theme.map((item: string) => {
+                {dataset.topics.map((item: string) => {
                   return (
                     <div className="govuk-body">
                       <a className="govuk-link" href="#">
-                        {item[0].toUpperCase() + item.slice(1)}
+                        {item}
                       </a>
                     </div>
                   );
