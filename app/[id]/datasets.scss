@@ -81,3 +81,12 @@
 
   font-family: "Helvetica Neue";
 }
+
+.app-date-table__header,
+.app-date-table__cell {
+  border-bottom-width: 0;
+}
+
+.app-date-table__header {
+  width: 120px;
+}

@@ -16,9 +16,12 @@ export default async function Datasets({ params }: { params: { id: string } }) {
     };
     return d
       .toLocaleDateString("en-GB", options)
-      .replace(",", "")
       .replace(/( AM| PM)/g, (m) => m.trim().toLowerCase());
   }
+
+  const SectionBreak = () => (
+    <hr className="govuk-section-break govuk-section-break--l govuk-section-break--visible"></hr>
+  );
 
   return (
     <>
@@ -70,7 +73,7 @@ export default async function Datasets({ params }: { params: { id: string } }) {
               </li>
             </ul>
           </div>
-          <hr className="govuk-section-break govuk-section-break--l govuk-section-break--visible"></hr>
+          <SectionBreak />
 
           <div className="govuk-grid-row">
             <div className="govuk-grid-column-two-thirds">
@@ -94,7 +97,7 @@ export default async function Datasets({ params }: { params: { id: string } }) {
                   View more datasets by this publisher
                 </a>
               </div>
-              <hr className="govuk-section-break govuk-section-break--l govuk-section-break--visible"></hr>
+              <SectionBreak />
               <div>
                 <h3 className="govuk-heading-s">Contact</h3>
                 <div className="govuk-body">
@@ -104,70 +107,45 @@ export default async function Datasets({ params }: { params: { id: string } }) {
                   </a>
                 </div>
               </div>
-              <hr className="govuk-section-break govuk-section-break--l govuk-section-break--visible"></hr>
+              <SectionBreak />
               <table className="govuk-table">
                 <tbody className="govuk-table__body">
                   <tr className="govuk-table__row">
                     <th
                       scope="col"
-                      className="govuk-table__header"
-                      style={{
-                        borderBottomWidth: 0,
-                        width: 120,
-                      }}
+                      className="govuk-table__header app-date-table__header"
                     >
                       Published
                     </th>
-                    <td
-                      className="govuk-table__cell"
-                      style={{
-                        borderBottomWidth: 0,
-                      }}
-                    >
+                    <td className="govuk-table__cell app-date-table__cell">
                       {formatDate(dataset.issued)}
                     </td>
                   </tr>
                   <tr className="govuk-table__row">
                     <th
                       scope="row"
-                      className="govuk-table__header"
-                      style={{
-                        borderBottomWidth: 0,
-                      }}
+                      className="govuk-table__header app-date-table__header"
                     >
                       Modified
                     </th>
-                    <td
-                      className="govuk-table__cell"
-                      style={{
-                        borderBottomWidth: 0,
-                      }}
-                    >
+                    <td className="govuk-table__cell app-date-table__cell">
                       {formatDate(dataset.next_release)}
                     </td>
                   </tr>
                   <tr className="govuk-table__row">
                     <th
                       scope="row"
-                      className="govuk-table__header"
-                      style={{
-                        borderBottomWidth: 0,
-                      }}
+                      className="govuk-table__header app-date-table__header"
                     >
                       Next release
                     </th>
-                    <td
-                      className="govuk-table__cell"
-                      style={{
-                        borderBottomWidth: 0,
-                      }}
-                    >
+                    <td className="govuk-table__cell app-date-table__cell">
                       {formatDate(dataset.next_release)}
                     </td>
                   </tr>
                 </tbody>
               </table>
-              <hr className="govuk-section-break govuk-section-break--l govuk-section-break--visible"></hr>
+              <SectionBreak />
               <div>
                 <h3 className="govuk-heading-s">Topics and subtopics</h3>
 
@@ -181,17 +159,17 @@ export default async function Datasets({ params }: { params: { id: string } }) {
                   );
                 })}
               </div>
-              <hr className="govuk-section-break govuk-section-break--l govuk-section-break--visible"></hr>
+              <SectionBreak />
               <div>
                 <h3 className="govuk-heading-s">Description</h3>
                 <p className="govuk-body">{dataset.description}</p>
               </div>
-              <hr className="govuk-section-break govuk-section-break--l govuk-section-break--visible"></hr>
+              <SectionBreak />
               <div>
                 <h3 className="govuk-heading-s">Coverage</h3>
                 <p className="govuk-body">{dataset.spatial_coverage_name}</p>
               </div>
-              <hr className="govuk-section-break govuk-section-break--l govuk-section-break--visible"></hr>
+              <SectionBreak />
               <div>
                 <h3 className="govuk-heading-s">Geography definition</h3>
                 <p className="govuk-body">
@@ -199,7 +177,7 @@ export default async function Datasets({ params }: { params: { id: string } }) {
                   Nation (England)
                 </p>
               </div>
-              <hr className="govuk-section-break govuk-section-break--l govuk-section-break--visible"></hr>
+              <SectionBreak />
               <div>
                 <h3 className="govuk-heading-s">Source</h3>
                 <div className="govuk-body">
@@ -209,7 +187,9 @@ export default async function Datasets({ params }: { params: { id: string } }) {
                   </a>
                 </div>
               </div>
-              <hr className="govuk-section-break govuk-section-break--l govuk-section-break--visible"></hr>
+
+              {/* notes and caveats secttion is in designs but isn't implemented yet */}
+              {/* <SectionBreak />
               <div>
                 <h3 className="govuk-heading-s">Notes and caveats</h3>
                 <div>
@@ -240,8 +220,8 @@ export default async function Datasets({ params }: { params: { id: string } }) {
                     </a>
                   </p>
                 </div>
-              </div>
-              <hr className="govuk-section-break govuk-section-break--l govuk-section-break--visible"></hr>
+              </div> */}
+              <SectionBreak />
               <div>
                 <h3 className="govuk-heading-s">Methodology</h3>
                 <div className="govuk-body">
@@ -250,7 +230,7 @@ export default async function Datasets({ params }: { params: { id: string } }) {
                   </a>
                 </div>
               </div>
-              <hr className="govuk-section-break govuk-section-break--l govuk-section-break--visible"></hr>
+              <SectionBreak />
               <div>
                 <h3 className="govuk-heading-s">Licence</h3>
                 <div className="govuk-body">
