@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+
 const USERNAME = process.env.NEXT_PRIVATE_USERNAME;
 const PASSWORD = process.env.NEXT_PRIVATE_PASSWORD;
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -17,7 +19,10 @@ const getHeaders = () => {
 
 const handleResponse = async (response: Response) => {
   if (!response.ok) {
-    throw new Error(`Failed to fetch data. Status: ${response.status}`);
+    if (response.status === 404) {
+      redirect("/not-found");
+    }
+    redirect("/error");
   }
 
   return response.json();
