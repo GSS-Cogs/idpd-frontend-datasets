@@ -290,7 +290,7 @@ export default async function Datasets({ params }: { params: { id: string } }) {
               <h2 className="govuk-heading-m">Download dataset</h2>
             </div>
           </div>
-          <section>
+          <section className="govuk-!-margin-top-7">
             <h1 className="govuk-heading-l" id="about">
               Structural metadata
             </h1>
