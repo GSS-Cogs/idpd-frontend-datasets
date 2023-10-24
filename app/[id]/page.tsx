@@ -49,6 +49,84 @@ const metadata = [
   },
 ];
 
+const data = [
+  {
+    field: "Statistical Geography",
+    values: [
+      "North East",
+      "North East",
+      "England",
+      "County Durham",
+      "England",
+      "North East",
+      "Darlington",
+      "Darlington",
+      "England",
+      "England",
+    ],
+  },
+  {
+    field: "Measure type",
+    values: [
+      "Pupils eligible for free school meals with persistent absences",
+      "Pupils eligible for free school meals with persistent absences",
+      "Pupils eligible for free school meals with persistent absences",
+      "Pupils eligible for free school meals with persistent absences",
+      "Pupils eligible for free school meals with persistent absences",
+      "Pupils eligible for free school meals with persistent absences",
+      "Pupils eligible for free school meals with persistent absences",
+      "Pupils eligible for free school meals with persistent absences",
+      "Pupils eligible for free school meals with persistent absences",
+      "Pupils eligible for free school meals with persistent absences",
+    ],
+  },
+  {
+    field: "Gregorian time interval",
+    values: [
+      "2017-08-01T00:00:00/P1Y",
+      "2017-08-01T00:00:00/P1Y",
+      "2017-08-01T00:00:00/P1Y",
+      "2017-08-01T00:00:00/P1Y",
+      "2017-08-01T00:00:00/P1Y",
+      "2017-08-01T00:00:00/P1Y",
+      "2017-08-01T00:00:00/P1Y",
+      "2017-08-01T00:00:00/P1Y",
+      "2017-08-01T00:00:00/P1Y",
+      "2017-08-01T00:00:00/P1Y",
+    ],
+  },
+  {
+    field: "Pupils eligible for free school meals with persistent absences",
+    values: [
+      "21.20165",
+      "23.01075",
+      "23.20222",
+      "39.96234",
+      "20.56852",
+      "quarter/2011-Q1",
+      "quarter/2022-Q3",
+      "quarter/2012-Q1",
+      "quarter/2019-Q2",
+      "quarter/2015-Q1",
+    ],
+  },
+  {
+    field: "Location",
+    values: [
+      "England and Wales",
+      "England and Wales",
+      "England and Wales",
+      "England and Wales",
+      "England and Wales",
+      "England and Wales",
+      "England and Wales",
+      "England and Wales",
+      "England and Wales",
+      "England and Wales",
+    ],
+  },
+];
+
 export default async function Datasets({ params }: { params: { id: string } }) {
   const dataset = await getDatasetWithSpatialCoverageInfo(params.id);
   function formatDate(date: string) {
@@ -291,7 +369,42 @@ export default async function Datasets({ params }: { params: { id: string } }) {
             </div>
           </div>
           <section className="govuk-!-margin-top-7">
-            <h1 className="govuk-heading-l" id="about">
+            <h1 className="govuk-heading-l" id="preview">
+              Data preview
+            </h1>
+            <div className="app-preview-table">
+              <table className="govuk-table">
+                <thead className="govuk-table__head">
+                  <tr className="govuk-table__row">
+                    {data.map((item) => {
+                      return (
+                        <th scope="col" className="govuk-table__header">
+                          {item.field}
+                        </th>
+                      );
+                    })}
+                  </tr>
+                </thead>
+                <tbody className="govuk-table__body">
+                  {data[0].values.map((item, index) => {
+                    return (
+                      <tr className="govuk-table__row">
+                        {data.map((item) => {
+                          return (
+                            <td className="govuk-table__cell">
+                              {item.values[index]}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </section>
+          <section className="govuk-!-margin-top-7">
+            <h1 className="govuk-heading-l" id="metadata">
               Structural metadata
             </h1>
             <table className="govuk-table">
