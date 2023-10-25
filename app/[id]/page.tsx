@@ -386,13 +386,13 @@ export default async function Datasets({ params }: { params: { id: string } }) {
                   </tr>
                 </thead>
                 <tbody className="govuk-table__body">
-                  {data[0].values.map((item, index) => {
+                  {data[0].values.map((_, rowIndex) => {
                     return (
-                      <tr className="govuk-table__row">
-                        {data.map((item) => {
+                      <tr key={rowIndex} className="govuk-table__row">
+                        {data.map((item, colIndex) => {
                           return (
-                            <td className="govuk-table__cell">
-                              {item.values[index]}
+                            <td key={colIndex} className="govuk-table__cell">
+                              {item.values[rowIndex]}
                             </td>
                           );
                         })}
