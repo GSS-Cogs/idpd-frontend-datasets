@@ -1,0 +1,33 @@
+.app-download-dataset {
+  background-color: govuk-colour("light-grey");
+  padding: govuk-spacing(4);
+}
+
+.app-download-dataset__button {
+  margin-bottom: 0 !important;
+  width: 100% !important;
+}
+
+.app-download-dataset-content {
+  display: flex;
+  justify-content: center;
+}
+
+.app-download-dataset-content__image {
+  width: 200px;
+  height: 120px;
+  border: solid;
+  border-color: $govuk-border-colour;
+  border-width: 0.5px;
+  padding: govuk-spacing(2);
+  background-color: govuk-colour("white");
+
+  margin-right: govuk-spacing(4);
+  margin-bottom: govuk-spacing(4);
+}
+
+.app-download-dataset-content__text-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}

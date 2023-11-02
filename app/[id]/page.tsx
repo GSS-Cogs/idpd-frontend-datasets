@@ -367,7 +367,12 @@ export default async function Datasets({ params }: { params: { id: string } }) {
             </div>
             <div className="govuk-grid-column-one-third">
               <div style={{ position: "sticky", top: 30 }}>
-                <DownloadDataset id={dataset.identifier} />
+                <DownloadDataset
+                  id={dataset.identifier}
+                  edition="2022-01"
+                  version="1"
+                  date={dataset.issued}
+                />
               </div>
             </div>
           </div>

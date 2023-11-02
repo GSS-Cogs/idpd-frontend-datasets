@@ -3,8 +3,6 @@ import useSWR from "swr";
 import { getDatasetCSV } from "@/libs/dataRequests";
 import { useEffect, useState } from "react";
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
-
 const getCSVHeaders = () => {
   const headers: Record<string, string> = {
     Accept: "text/csv",
@@ -13,74 +11,79 @@ const getCSVHeaders = () => {
   return headers;
 };
 
-async function fetchDataFromURL() {
-  const options: RequestInit = {
-    method: "GET",
-    headers: getCSVHeaders(),
-    credentials: "include",
-  };
-  try {
-    const response = await fetch(
-      `${BACKEND_URL}${"/datasets/cpih/editions/2022-01/versions/1.csv"}`,
-      options
-    );
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    return await response.text();
-  } catch (error) {
-    console.error("Fetch error:", error);
-    throw error;
-  }
-}
-
-const DownloadDataset = ({ id }: { id: string }) => {
+const DownloadDataset = ({
+  id,
+  edition,
+  version,
+  date,
+}: {
+  id: string;
+  edition: string;
+  version: string;
+  date: string;
+}) => {
   async function downloadCSV() {
-    const response = await fetchDataFromURL();
-    console.log(response);
-    // Create a Blob containing the CSV data
-    const blob = new Blob([response], { type: "text/csv" });
+    function formatDate(input: string) {
+      // Create a Date object from the input string
+      const date = new Date(input);
 
-    // Create a URL for the Blob
-    const url = URL.createObjectURL(blob);
+      // if (isNaN(date)) {
+      //   // Handle invalid input
+      //   return "Invalid Date";
+      // }
 
-    // Create an invisible <a> element to trigger the download
-    const a = document.createElement("a");
-    a.style.display = "none";
-    a.href = url;
-    a.download = id + "_data.csv";
+      // Define an array of abbreviated month names
+      const monthNames = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
 
-    // Append the <a> element to the document and trigger the click event
-    document.body.appendChild(a);
-    a.click();
+      // Extract the month and year from the Date object
+      const month = monthNames[date.getMonth()]; // Get the month name
+      const year = date.getFullYear().toString().slice(-2);
 
-    // Clean up by removing the <a> element and revoking the Blob URL
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+      // Format the date as "MM-yy"
+      return `${month}-${year}`;
+    }
+
+    // const response = await getDatasetCSV(id, edition, version);
+    // // Create a Blob containing the CSV data
+    // const blob = new Blob([response], { type: "text/csv" });
+
+    // // Create a URL for the Blob
+    // const url = URL.createObjectURL(blob);
+    // const formattedDate = formatDate(date);
+    // // Create an invisible <a> element to trigger the download
+    // const a = document.createElement("a");
+    // a.style.display = "none";
+    // a.href = url;
+    // a.download = id + "_" + formattedDate + ".csv";
+
+    // document.body.appendChild(a);
+    // a.click();
+    // document.body.removeChild(a);
+    // URL.revokeObjectURL(url);
+    const dummyData = "rahul,delhi,accountsdept\n";
+    const csvContent = `data:text/csv;charset=utf-8,${dummyData}`;
+    const encodedURI = encodeURI(csvContent);
+    window.open(encodedURI);
   }
-  return (
-    <div
-      style={{
-        backgroundColor: "#F3F2F1",
-        padding: 20,
-      }}
-    >
-      <h2 className="govuk-heading-m">Download dataset</h2>
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <div
-          style={{
-            width: 200,
-            height: 120,
-            border: "solid",
-            borderColor: "#B1B4B6",
-            borderWidth: 0.5,
-            padding: 10,
-            backgroundColor: "white",
 
-            marginRight: 20,
-            marginBottom: 20,
-          }}
-        >
+  return (
+    <div className="app-download-dataset">
+      <h2 className="govuk-heading-m">Download dataset</h2>
+      <div className="app-download-dataset-content">
+        <div className="app-download-dataset-content__image">
           <div
             style={{
               width: "100%",
@@ -122,13 +125,7 @@ const DownloadDataset = ({ id }: { id: string }) => {
             </tbody>
           </table>
         </div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-          }}
-        >
+        <div className="app-download-dataset-content__text-wrapper">
           <p className="govuk-body">
             Download the dataset in CSV format for use in the tool or
             application of your choice.
@@ -137,10 +134,9 @@ const DownloadDataset = ({ id }: { id: string }) => {
         </div>
       </div>
       <button
-        className="govuk-button"
+        className="govuk-button app-download-dataset__button"
         data-module="govuk-button"
         onClick={downloadCSV}
-        style={{ marginBottom: 0, width: "100%" }}
       >
         Download data (CSV)
       </button>
