@@ -373,6 +373,17 @@ export default async function Datasets({ params }: { params: { id: string } }) {
                   version="1"
                   date={dataset.issued}
                 />
+                <div className="app-download-dataset">
+                  <h2 className="govuk-heading-m">Download dataset</h2>
+                  <p className="govuk-body govuk-!-margin-bottom-0">
+                    Utilise APIs to programmatically retrieve data for use
+                    within your own applications. Read the{" "}
+                    <a className="govuk-link" href="/guidance">
+                      developer guidelines
+                    </a>{" "}
+                    for more information.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
