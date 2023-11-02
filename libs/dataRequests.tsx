@@ -82,9 +82,31 @@ const getPublishers = async () => {
   return data;
 };
 
+const getDatasetCSV = async (id: string, edition: string, version: string) => {
+  try {
+    const options: RequestInit = {
+      method: "GET",
+      headers: {
+        Accept: "text/csv",
+      },
+      credentials: "include",
+    };
+
+    const response = await fetch(
+      `${BACKEND_URL}/datasets/${id}/editions/${edition}/versions/${version}.csv`,
+      options
+    );
+    return response.text();
+  } catch (error) {
+    console.error("Fetch Error:", error);
+    throw error;
+  }
+};
+
 export {
   getDatasets,
   getDataset,
+  getDatasetCSV,
   getDatasetWithSpatialCoverageInfo,
   getTopics,
   getPublishers,
