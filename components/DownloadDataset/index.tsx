@@ -25,26 +25,12 @@ const DownloadDataset = ({
   async function downloadCSV() {
     const formatDate = (input: string) => {
       const date = new Date(input);
-      const monthNames = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ];
 
-      const month = monthNames[date.getMonth()];
-      const year = date.getFullYear().toString().slice(-2);
+      const month = (date.getMonth() + 1).toString().padStart(2, "0");
+      const year = date.getFullYear().toString();
 
       // Format the date as "MM-yy"
-      return `${month}-${year}`;
+      return `${year}-${month}`;
     };
 
     const response = await getDatasetCSV(id, edition, version);
