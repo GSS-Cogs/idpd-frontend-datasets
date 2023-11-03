@@ -1,0 +1,55 @@
+@import "node_modules/govuk-frontend/govuk/all";
+.app-datasets {
+  @include govuk-responsive-padding(6, "top");
+  @include govuk-responsive-padding(4, "bottom");
+  color: govuk-colour("black");
+}
+
+.app-datasets__title {
+  color: govuk-colour("black");
+  @include govuk-responsive-margin(6, "bottom");
+}
+
+.app-datasets__description {
+  @include govuk-font(24);
+  margin-bottom: 0;
+}
+
+.app-datasets__caption {
+  //   color: govuk-colour("white");
+}
+
+.app-datasets__image {
+  display: none;
+  @include govuk-media-query($from: desktop) {
+    display: block;
+    width: 100%;
+    margin-top: govuk-spacing(3);
+  }
+}
+
+.app-datasets__phase-banner__tag {
+  background-color: govuk-colour("white");
+  color: govuk-colour("blue");
+}
+
+.app-datasets__phase-banner__tag--alternative {
+  background-color: govuk-colour("blue");
+  color: govuk-colour("white");
+}
+
+.app-datasets__contents {
+}
+
+.app-datasets__list-item {
+  @include govuk-font($size: 16);
+}
+.app-datasets__list-item:before {
+  content: "\2014";
+  margin-right: 8px;
+}
+
+.app-datasets__contents-title {
+  @include govuk-font($size: 16);
+  margin-bottom: 8px;
+}
