@@ -151,7 +151,7 @@ export default async function Datasets({ params }: { params: { id: string } }) {
 
                 {dataset.topics.map((item: string) => {
                   return (
-                    <div className="govuk-body">
+                    <div className="govuk-body" key={item}>
                       <a className="govuk-link" href="#">
                         {item}
                       </a>
