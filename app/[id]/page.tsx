@@ -374,7 +374,7 @@ export default async function Datasets({ params }: { params: { id: string } }) {
                   date={dataset.issued}
                 />
                 <div className="app-download-dataset">
-                  <h2 className="govuk-heading-m">Download dataset</h2>
+                  <h2 className="govuk-heading-m">Developer information</h2>
                   <p className="govuk-body govuk-!-margin-bottom-0">
                     Utilise APIs to programmatically retrieve data for use
                     within your own applications. Read the{" "}

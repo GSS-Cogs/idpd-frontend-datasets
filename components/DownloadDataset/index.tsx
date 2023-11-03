@@ -23,16 +23,8 @@ const DownloadDataset = ({
   date: string;
 }) => {
   async function downloadCSV() {
-    function formatDate(input: string) {
-      // Create a Date object from the input string
+    const formatDate = (input: string) => {
       const date = new Date(input);
-
-      // if (isNaN(date)) {
-      //   // Handle invalid input
-      //   return "Invalid Date";
-      // }
-
-      // Define an array of abbreviated month names
       const monthNames = [
         "Jan",
         "Feb",
@@ -48,35 +40,30 @@ const DownloadDataset = ({
         "Dec",
       ];
 
-      // Extract the month and year from the Date object
-      const month = monthNames[date.getMonth()]; // Get the month name
+      const month = monthNames[date.getMonth()];
       const year = date.getFullYear().toString().slice(-2);
 
       // Format the date as "MM-yy"
       return `${month}-${year}`;
-    }
+    };
 
-    // const response = await getDatasetCSV(id, edition, version);
-    // // Create a Blob containing the CSV data
-    // const blob = new Blob([response], { type: "text/csv" });
+    const response = await getDatasetCSV(id, edition, version);
+    // Create a Blob containing the CSV data
+    const blob = new Blob([response], { type: "text/csv" });
 
-    // // Create a URL for the Blob
-    // const url = URL.createObjectURL(blob);
-    // const formattedDate = formatDate(date);
-    // // Create an invisible <a> element to trigger the download
-    // const a = document.createElement("a");
-    // a.style.display = "none";
-    // a.href = url;
-    // a.download = id + "_" + formattedDate + ".csv";
+    // Create a URL for the Blob
+    const url = URL.createObjectURL(blob);
+    const formattedDate = formatDate(date);
+    // Create an invisible <a> element to trigger the download
+    const a = document.createElement("a");
+    a.style.display = "none";
+    a.href = url;
+    a.download = id + "_" + formattedDate + ".csv";
 
-    // document.body.appendChild(a);
-    // a.click();
-    // document.body.removeChild(a);
-    // URL.revokeObjectURL(url);
-    const dummyData = "rahul,delhi,accountsdept\n";
-    const csvContent = `data:text/csv;charset=utf-8,${dummyData}`;
-    const encodedURI = encodeURI(csvContent);
-    window.open(encodedURI);
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   }
 
   return (
