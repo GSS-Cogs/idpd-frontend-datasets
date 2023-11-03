@@ -1,0 +1,137 @@
+$input-size: 40px;
+$large-input-size: 50px;
+
+@mixin large-mode {
+  .govuk-search__label {
+    @include govuk-font($size: 19, $line-height: $large-input-size);
+  }
+
+  .govuk-search__input[type="search"] {
+    height: $large-input-size;
+  }
+
+  .govuk-search__submit {
+    width: $large-input-size;
+    height: $large-input-size;
+
+    .govuk-search__icon {
+      @include icon-positioning($large-input-size);
+    }
+  }
+}
+
+@mixin icon-positioning($container-size) {
+  $icon-dimension: 20px;
+  $icon-position: ($container-size - $icon-dimension) / 2;
+
+  display: block;
+  pointer-events: none;
+  position: absolute;
+  height: $icon-dimension;
+  width: $icon-dimension;
+  top: $icon-position;
+  left: $icon-position;
+}
+
+.govuk-input__wrapper {
+  display: table;
+}
+
+.govuk-search__item {
+  position: relative;
+  display: table-cell;
+  vertical-align: top;
+}
+
+.govuk-search__submit-wrapper {
+  width: 1%;
+}
+
+.govuk-search__submit {
+  border: 0;
+  cursor: pointer;
+  border-radius: 0;
+  position: relative;
+  padding: 0;
+  width: $input-size;
+  height: $input-size;
+  text-indent: -5000px;
+  overflow: hidden;
+
+  .govuk-search__icon {
+    @include icon-positioning($input-size);
+  }
+
+  &:focus {
+    z-index: 2;
+    outline: $govuk-focus-width solid $govuk-focus-colour;
+    // Ensure outline appears outside of the element
+    outline-offset: 0;
+    // Double the border by adding its width again. Use `box-shadow` for this // instead of changing `border-width` - this is for consistency with
+    // Also, `outline` cannot be utilised
+    // here as it is already used for the yellow focus state.
+    box-shadow: inset 0 0 0 $govuk-border-width-form-element * 2
+      govuk-colour("black");
+
+    @include govuk-if-ie8 {
+      // IE8 doesn't support `box-shadow` so double the border with
+      // `border-width`.
+      border-width: $govuk-border-width-form-element * 2;
+    }
+  }
+
+  &::-moz-focus-inner {
+    border: 0;
+  }
+}
+
+.govuk-search--on-govuk-blue {
+  .govuk-search__label {
+    color: govuk-colour("white");
+  }
+
+  .govuk-search__input {
+    border-width: 0;
+
+    // no need for black outline as there is enough contrast
+    // with the blue background
+    &:focus {
+      box-shadow: none;
+    }
+  }
+
+  .govuk-search__submit {
+    background-color: govuk-colour("black");
+    color: govuk-colour("white");
+
+    &:hover {
+      background-color: lighten(govuk-colour("black"), 5%);
+    }
+  }
+
+  .js-enabled & {
+    .govuk-search__label {
+      color: $govuk-secondary-text-colour;
+    }
+  }
+}
+
+.govuk-search--on-white {
+  .govuk-search__submit {
+    background-color: govuk-colour("blue");
+    color: govuk-colour("white");
+
+    &:hover {
+      background-color: lighten(govuk-colour("blue"), 5%);
+    }
+  }
+
+  .govuk-search__input[type="search"] {
+    border-right-width: 0;
+
+    // add the border once focused
+    &:focus {
+      border-right-width: 2px;
+    }
+  }
+}
