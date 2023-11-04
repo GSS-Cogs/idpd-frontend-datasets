@@ -16,4 +16,4 @@ start:
 
 debug:
 	@echo "Starting Next.js app..."
-	@$(ALL_ENV_VARS) yarn dev
+	@$(ALL_ENV_VARS) && yarn dev
