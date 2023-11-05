@@ -5,9 +5,13 @@ const PASSWORD = process.env.NEXT_PRIVATE_PASSWORD;
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 async function getCsvPreview(url: string): Promise<string[][]> {
+  /*
+    Get a 10 line preview of a csv arranged as an
+    array of arrays.
+  */
 
   try {
-    const response = await fetchCsvData(url, "GET");
+    const response = await fetchData(url, "GET", "text/csv");
     const csvData = await response.text();
 
     // Split the CSV data into lines
@@ -22,22 +26,9 @@ async function getCsvPreview(url: string): Promise<string[][]> {
   }
 }
 
-const getCsvHeaders = () => {
+const getHeaders = (mimeType: string) => {
   const headers: Record<string, string> = {
-    Accept: "text/csv",
-  };
-
-  const basicAuth = `Basic ${Buffer.from(`${USERNAME}:${PASSWORD}`).toString(
-    "base64"
-  )}`;
-  headers.Authorization = basicAuth;
-
-  return headers;
-};
-
-const getHeaders = () => {
-  const headers: Record<string, string> = {
-    Accept: "application/ld+json",
+    Accept: mimeType,
   };
 
   const basicAuth = `Basic ${Buffer.from(`${USERNAME}:${PASSWORD}`).toString(
@@ -69,37 +60,11 @@ const handleResponse = async (response: Response) => {
 
 };
 
-const fetchCsvData = async (url: string, method: string): Promise<any> => {
+const fetchData = async (url: string, method: string, mimeType: string = "application/ld+json"): Promise<any> => {
   try {
     const options: RequestInit = {
       method,
-      headers: getCsvHeaders(),
-      credentials: "include",
-    };
-
-    let fetchURL;
-
-    if (url.startsWith('http://') || url.startsWith('https://')) {
-      // If the URL already starts with "http://" or "https://", use it as is
-      fetchURL = url;
-    } else {
-      // If not, prepend it with BACKEND_URL
-      fetchURL = `${BACKEND_URL}${url}`;
-    }
-
-    const response = await fetch(fetchURL, options);
-    return handleResponse(response);
-  } catch (error) {
-    console.error("Fetch Error:", error);
-    throw error;
-  }
-};
-
-const fetchData = async (url: string, method: string): Promise<any> => {
-  try {
-    const options: RequestInit = {
-      method,
-      headers: getHeaders(),
+      headers: getHeaders(mimeType),
       credentials: "include",
     };
 
@@ -142,9 +107,7 @@ const getDatasetLatestEditionMetadata = async (dataset_id: string) => {
   Given a dataset id, returns the url for the latest
   edition of that dataset.
   */
-  console.log("Hitting getDatasetLatestEditionMetadata")
   const data = await fetchData(`/datasets/${dataset_id}`, "GET")
-  console.log(JSON.stringify(data, null, 2))
   return data.editions[0]
 }
 
@@ -153,29 +116,19 @@ const getEditionLatestVersionMetadata = async (edition_url: string) => {
   Given a dataset_id and an edtion_id, returns the metadata
   for the latest version.
   */
-  console.log("Hitting getEditionLatestVersionMetadata")
   const data = await fetchData(edition_url, "GET")
   const latest_version_id = data.versions[0]["@id"]
-  console.log(latest_version_id)
-
   const latestVersionDocument = await fetchData(latest_version_id, "GET")
-  console.log(JSON.stringify(latestVersionDocument, null, 2))
   return latestVersionDocument
 }
 
 const getLatestDatasetEditionVersionMetadata = async (dataset_id: string) => {
   /*
-  Given a dataset_id, retrieve the latest version of the
-  latest edition of the dataset.
+  Given a dataset_id, retrieve metadata document of latest version
+  of the latest edition of the dataset.
   */
-  console.log("Hitting getDatasetLatestEditionMetadata")
-  console.log()
   const latestEditionMetadata = await getDatasetLatestEditionMetadata(dataset_id)
-  console.log(JSON.stringify(latestEditionMetadata, null, 2))
-
-  console.log("Hitting getEditionLatestVersionMetadata")
   const latestEditionVersionMetadata = await getEditionLatestVersionMetadata(latestEditionMetadata["@id"])
-  console.log(JSON.stringify(latestEditionVersionMetadata, null, 2))
   return latestEditionVersionMetadata
 }
 
