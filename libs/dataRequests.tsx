@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+
 const USERNAME = process.env.NEXT_PRIVATE_USERNAME;
 const PASSWORD = process.env.NEXT_PRIVATE_PASSWORD;
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -17,7 +19,10 @@ const getHeaders = () => {
 
 const handleResponse = async (response: Response) => {
   if (!response.ok) {
-    throw new Error(`Failed to fetch data. Status: ${response.status}`);
+    if (response.status === 404) {
+      redirect("/not-found");
+    }
+    redirect("/error");
   }
 
   return response.json();
@@ -49,6 +54,24 @@ const getDataset = async (id: string) => {
   return data;
 };
 
+const getDatasetWithSpatialCoverageInfo = async (id: string) => {
+  // this function gets the dataset like normal then adds a new field 'spatial_coverage_name' to it
+  // which is the corresponding name of the given coverage code
+  // e.g. K02000001 -> United Kingdom
+  const data = await fetchData(`/datasets/${id}`, "GET");
+  const code = data.spatial_coverage;
+
+  const response = await handleResponse(
+    await fetch(`https://findthatpostcode.uk/areas/${code}.json`)
+  );
+
+  const coverage = response.data.attributes.name;
+
+  data.spatial_coverage_name = coverage;
+
+  return data;
+};
+
 const getTopics = async () => {
   const data = await fetchData(`/topics`, "GET");
   return data;
@@ -59,4 +82,16 @@ const getPublishers = async () => {
   return data;
 };
 
-export { getDatasets, getDataset, getTopics, getPublishers };
+const getPublisher = async (id: string) => {
+  const data = await fetchData(`/publishers/${id}`, "GET");
+  return data;
+};
+
+export {
+  getDatasets,
+  getDataset,
+  getDatasetWithSpatialCoverageInfo,
+  getTopics,
+  getPublishers,
+  getPublisher,
+};

@@ -12,8 +12,6 @@ $after-button-padding-right: govuk-spacing(4);
 $after-button-padding-left: govuk-spacing(4);
 
 .govuk-header {
-  border-bottom: revert !important;
-
   [hidden] {
     display: none;
   }
