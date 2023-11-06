@@ -102,13 +102,13 @@ const getDataset = async (id: string) => {
   return data;
 };
 
-const getDatasetLatestEditionMetadata = async (dataset_id: string) => {
+const getDatasetLatestEditionUrl = async (dataset_id: string) => {
   /*
-  Given a dataset id, returns the url for the latest
-  edition of that dataset.
+  Given a dataset id, returns the (short form - just whats show at
+  the datasets) metadata document for the latest edition of that dataset.
   */
   const data = await fetchData(`/datasets/${dataset_id}`, "GET")
-  return data.editions[0]
+  return data.editions[0]["@id"]
 }
 
 const getEditionLatestVersionMetadata = async (edition_url: string) => {
@@ -117,8 +117,8 @@ const getEditionLatestVersionMetadata = async (edition_url: string) => {
   for the latest version.
   */
   const data = await fetchData(edition_url, "GET")
-  const latest_version_id = data.versions[0]["@id"]
-  const latestVersionDocument = await fetchData(latest_version_id, "GET")
+  const latestVersionId = data.versions[0]["@id"]
+  const latestVersionDocument = await fetchData(latestVersionId, "GET")
   return latestVersionDocument
 }
 
@@ -127,8 +127,8 @@ const getLatestDatasetEditionVersionMetadata = async (dataset_id: string) => {
   Given a dataset_id, retrieve metadata document of latest version
   of the latest edition of the dataset.
   */
-  const latestEditionMetadata = await getDatasetLatestEditionMetadata(dataset_id)
-  const latestEditionVersionMetadata = await getEditionLatestVersionMetadata(latestEditionMetadata["@id"])
+  const latestEditionUrl = await getDatasetLatestEditionUrl(dataset_id)
+  const latestEditionVersionMetadata = await getEditionLatestVersionMetadata(latestEditionUrl)
   return latestEditionVersionMetadata
 }
 
@@ -170,7 +170,7 @@ export {
   getCsvPreview,
   getDatasets,
   getDataset,
-  getDatasetLatestEditionMetadata,
+  getDatasetLatestEditionUrl,
   getEditionLatestVersionMetadata,
   getLatestDatasetEditionVersionMetadata,
   getDatasetWithSpatialCoverageInfo,
