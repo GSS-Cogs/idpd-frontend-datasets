@@ -82,10 +82,16 @@ const getPublishers = async () => {
   return data;
 };
 
+const getPublisher = async (id: string) => {
+  const data = await fetchData(`/publishers/${id}`, "GET");
+  return data;
+};
+
 export {
   getDatasets,
   getDataset,
   getDatasetWithSpatialCoverageInfo,
   getTopics,
   getPublishers,
+  getPublisher,
 };
