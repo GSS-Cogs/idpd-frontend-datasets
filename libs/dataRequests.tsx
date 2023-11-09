@@ -82,6 +82,11 @@ const getPublishers = async () => {
   return data;
 };
 
+const getPublisher = async (id: string) => {
+  const data = await fetchData(`/publishers/${id}`, "GET");
+  return data;
+};
+
 const getDatasetCSV = async (id: string, edition: string, version: string) => {
   try {
     const options: RequestInit = {
@@ -110,4 +115,5 @@ export {
   getDatasetWithSpatialCoverageInfo,
   getTopics,
   getPublishers,
+  getPublisher,
 };

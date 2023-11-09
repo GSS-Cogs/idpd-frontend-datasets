@@ -5,3 +5,5 @@ WORKDIR /app
 
 RUN yarn
 RUN make build
+
+CMD ["make", "start"]

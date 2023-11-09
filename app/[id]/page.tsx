@@ -1,7 +1,10 @@
 import "./datasets.scss";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import PhaseBanner from "@/components/PhaseBanner";
-import { getDatasetWithSpatialCoverageInfo } from "../../libs/dataRequests";
+import {
+  getDatasetWithSpatialCoverageInfo,
+  getPublisher,
+} from "../../libs/dataRequests";
 import Image from "next/image";
 import DownloadDataset from "@/components/DownloadDataset";
 
@@ -130,6 +133,10 @@ const data = [
 
 export default async function Datasets({ params }: { params: { id: string } }) {
   const dataset = await getDatasetWithSpatialCoverageInfo(params.id);
+  const splitPub = dataset.publisher.split("/");
+  const result = splitPub[splitPub.length - 1];
+  const publisher = await getPublisher(result);
+
   function formatDate(date: string) {
     const d = new Date(date);
     const options: Intl.DateTimeFormatOptions = {
@@ -214,7 +221,7 @@ export default async function Datasets({ params }: { params: { id: string } }) {
                     alt="Govuk Crest"
                   />
                   <h3 className="app-datasets__publisher-text">
-                    {dataset.publisher}
+                    {publisher.title}
                   </h3>
                 </div>
                 <a className="govuk-link" href="#">
@@ -275,7 +282,7 @@ export default async function Datasets({ params }: { params: { id: string } }) {
 
                 {dataset.topics.map((item: string) => {
                   return (
-                    <div className="govuk-body">
+                    <div className="govuk-body" key={item}>
                       <a className="govuk-link" href="#">
                         {item}
                       </a>
