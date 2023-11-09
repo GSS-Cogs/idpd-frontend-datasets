@@ -7,6 +7,51 @@ import {
 } from "../../libs/dataRequests";
 import Image from "next/image";
 
+const metadata = [
+  {
+    field: "Statistical geography",
+    type: "String",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam id neque at ex accumsan dictum at non tellus. Fusce sagittis, ligula eu condimentum commodo, magna nisi cursus mi, ut sagittis orci elit id orci.",
+  },
+  {
+    field: "Measure type",
+    type: "String",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam id neque at ex accumsan dictum at non tellus. Fusce sagittis, ligula eu condimentum commodo, magna nisi cursus mi, ut sagittis orci elit id orci.",
+  },
+  {
+    field: "Gregorian time interval",
+    type: "Date/Time",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam id neque at ex accumsan dictum at non tellus. Fusce sagittis, ligula eu condimentum commodo, magna nisi cursus mi, ut sagittis orci elit id orci.",
+  },
+  {
+    field: "Pupils eligible for free school meals with persistent absences",
+    type: "String",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam id neque at ex accumsan dictum at non tellus. Fusce sagittis, ligula eu condimentum commodo, magna nisi cursus mi, ut sagittis orci elit id orci.",
+  },
+  {
+    field: "Unit of measure",
+    type: "String",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam id neque at ex accumsan dictum at non tellus. Fusce sagittis, ligula eu condimentum commodo, magna nisi cursus mi, ut sagittis orci elit id orci.",
+  },
+  {
+    field: "Upper confidence interval",
+    type: "String",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam id neque at ex accumsan dictum at non tellus. Fusce sagittis, ligula eu condimentum commodo, magna nisi cursus mi, ut sagittis orci elit id orci.",
+  },
+  {
+    field: "Lower confidence interval",
+    type: "String",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam id neque at ex accumsan dictum at non tellus. Fusce sagittis, ligula eu condimentum commodo, magna nisi cursus mi, ut sagittis orci elit id orci.",
+  },
+];
+
 export default async function Datasets({ params }: { params: { id: string } }) {
   const dataset = await getDatasetWithSpatialCoverageInfo(params.id);
   const splitPub = dataset.publisher.split("/");
@@ -252,6 +297,59 @@ export default async function Datasets({ params }: { params: { id: string } }) {
               <h2 className="govuk-heading-m">Download dataset</h2>
             </div>
           </div>
+          <section className="govuk-!-margin-top-7">
+            <h1 className="govuk-heading-l" id="about">
+              Structural metadata
+            </h1>
+            <table className="govuk-table">
+              <thead className="govuk-table__head">
+                <tr className="govuk-table__row">
+                  <th scope="col" className="govuk-table__header">
+                    Field
+                  </th>
+                  <th scope="col" className="govuk-table__header">
+                    Datatype
+                  </th>
+                  <th
+                    scope="col"
+                    className="govuk-table__header app-metadata-table__header--visible"
+                  >
+                    Description
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="govuk-table__body">
+                {metadata.map((item) => {
+                  return (
+                    <>
+                      <tr className="govuk-table__row">
+                        <th
+                          scope="row"
+                          className="govuk-table__header app-metadata-table__header"
+                        >
+                          {item.field}
+                        </th>
+                        <td className="govuk-table__cell app-metadata-table__cell">
+                          {item.type}
+                        </td>
+                        <td className="govuk-table__cell app-metadata-table__cell--visible">
+                          {item.description}
+                        </td>
+                      </tr>
+                      <tr className="govuk-table__row">
+                        <td
+                          colSpan={2}
+                          className="govuk-table__cell app-metadata-table__cell--mobile-visible"
+                        >
+                          {item.description}
+                        </td>
+                      </tr>
+                    </>
+                  );
+                })}
+              </tbody>
+            </table>
+          </section>
         </main>
       </div>
     </>

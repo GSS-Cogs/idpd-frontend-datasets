@@ -90,3 +90,29 @@
 .app-date-table__header {
   width: 120px;
 }
+
+.app-metadata-table__header {
+  width: 360px;
+}
+
+.app-metadata-table__header,
+.app-metadata-table__cell {
+  @include govuk-media-query($until: desktop) {
+    border-bottom-width: 0;
+  }
+}
+
+.app-metadata-table__header--visible,
+.app-metadata-table__cell--visible {
+  display: none;
+  @include govuk-media-query($from: desktop) {
+    display: table-cell;
+  }
+}
+
+.app-metadata-table__cell--mobile-visible {
+  display: table-cell;
+  @include govuk-media-query($from: desktop) {
+    display: none;
+  }
+}
