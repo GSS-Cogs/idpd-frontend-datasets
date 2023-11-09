@@ -385,7 +385,11 @@ export default async function Datasets({ params }: { params: { id: string } }) {
                   <tr className="govuk-table__row">
                     {data.map((item) => {
                       return (
-                        <th scope="col" className="govuk-table__header">
+                        <th
+                          scope="col"
+                          className="govuk-table__header"
+                          key={item.field}
+                        >
                           {item.field}
                         </th>
                       );
