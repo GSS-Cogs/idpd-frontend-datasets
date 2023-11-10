@@ -6,6 +6,7 @@ import {
   getPublisher,
 } from "../../libs/dataRequests";
 import Image from "next/image";
+import DownloadDataset from "@/components/DownloadDataset";
 
 const metadata = [
   {
@@ -205,7 +206,7 @@ export default async function Datasets({ params }: { params: { id: string } }) {
           </div>
           <SectionBreak />
 
-          <div className="govuk-grid-row">
+          <div className="govuk-grid-row app-section-row">
             <div className="govuk-grid-column-two-thirds">
               <h1 className="govuk-heading-l" id="about">
                 About this dataset
@@ -372,7 +373,25 @@ export default async function Datasets({ params }: { params: { id: string } }) {
               </div>
             </div>
             <div className="govuk-grid-column-one-third">
-              <h2 className="govuk-heading-m">Download dataset</h2>
+              <div style={{ position: "sticky", top: 30 }}>
+                <DownloadDataset
+                  id={dataset.identifier}
+                  edition="2022-01"
+                  version="1"
+                  date={dataset.issued}
+                />
+                <div className="app-download-dataset">
+                  <h2 className="govuk-heading-m">Developer information</h2>
+                  <p className="govuk-body govuk-!-margin-bottom-0">
+                    Utilise APIs to programmatically retrieve data for use
+                    within your own applications. Read the{" "}
+                    <a className="govuk-link" href="/guidance">
+                      developer guidelines
+                    </a>{" "}
+                    for more information.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
           <section className="govuk-!-margin-top-7">
