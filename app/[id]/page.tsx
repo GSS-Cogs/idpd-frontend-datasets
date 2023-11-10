@@ -321,6 +321,9 @@ export default async function Datasets({ params }: { params: { id: string } }) {
             <table className="govuk-table">
               <thead className="govuk-table__head">
                 <tr className="govuk-table__row">
+                <th scope="col" className="govuk-table__header">
+                    Column
+                  </th>
                   <th scope="col" className="govuk-table__header">
                     Field
                   </th>
@@ -340,6 +343,12 @@ export default async function Datasets({ params }: { params: { id: string } }) {
                   return (
                     <>
                       <tr className="govuk-table__row">
+                      <th
+                          scope="row"
+                          className="govuk-table__header app-metadata-table__header"
+                        >
+                          {item.name}
+                        </th>
                         <th
                           scope="row"
                           className="govuk-table__header app-metadata-table__header"
