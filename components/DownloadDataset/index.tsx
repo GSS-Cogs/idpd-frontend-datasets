@@ -1,15 +1,5 @@
 "use client";
-import useSWR from "swr";
 import { getDatasetCSV } from "@/libs/dataRequests";
-import { useEffect, useState } from "react";
-
-const getCSVHeaders = () => {
-  const headers: Record<string, string> = {
-    Accept: "text/csv",
-  };
-
-  return headers;
-};
 
 const DownloadDataset = ({
   id,
