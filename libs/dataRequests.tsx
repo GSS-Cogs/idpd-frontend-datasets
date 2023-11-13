@@ -26,14 +26,19 @@ async function getCsvPreview(url: string): Promise<string[][]> {
   }
 }
 
-const getDatasetCsv = async (url: string) => {
+async function getDatasetCsv(url: string): Promise<string> {
   /*
     Get given datasets csv data
   */
-  const response = await fetchData(url, "GET", "text/csv");
-  const csvData = await response.text();
-  return csvData;
-};
+  try {
+    const response = await fetchData(url, "GET", "text/csv");
+    const csvData = await response.text();
+
+    return csvData;
+  } catch (error) {
+    throw error; // You can throw an error for handling it in the caller
+  }
+}
 
 const getHeaders = (mimeType: string) => {
   const headers: Record<string, string> = {
