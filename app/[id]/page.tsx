@@ -336,7 +336,12 @@ export default async function Datasets({ params }: { params: { id: string } }) {
                 </tr>
               </thead>
               <tbody className="govuk-table__body">
-                {metadata.map((item) => {
+                {metadata.map((item: {
+                  name: string,
+                  titles: string,
+                  datatype: string,
+                  description: string
+                }) => {
                   return (
                     <>
                       <tr className="govuk-table__row">
