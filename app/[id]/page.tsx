@@ -1,29 +1,29 @@
 import "./datasets.scss";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import PhaseBanner from "@/components/PhaseBanner";
-import { 
+import {
   getCsvPreview,
   getDatasetWithSpatialCoverageInfo,
   getDatasetLatestEditionLatestVersionMetadata,
-  getPublisher
+  getPublisher,
 } from "../../libs/dataRequests";
 import Image from "next/image";
 import DownloadDataset from "@/components/DownloadDataset";
 
-
 export default async function Datasets({ params }: { params: { id: string } }) {
-  
   // Get high level dataset data
   const dataset = await getDatasetWithSpatialCoverageInfo(params.id);
 
   // Get the latest version of the latest edition of this dataset
-  const latestVersion = await getDatasetLatestEditionLatestVersionMetadata(params.id);
-  
+  const latestVersion = await getDatasetLatestEditionLatestVersionMetadata(
+    params.id
+  );
+
   // Get column metadata from this version
-  const metadata = latestVersion.table_schema.columns
+  const metadata = latestVersion.table_schema.columns;
 
   // Get a 10 lines preview of the csv asociated with this version
-  const csvData = await getCsvPreview(latestVersion.download_url)
+  const csvData = await getCsvPreview(latestVersion.download_url);
   const splitPub = dataset.publisher.split("/");
   const result = splitPub[splitPub.length - 1];
   const publisher = await getPublisher(result);
@@ -267,8 +267,7 @@ export default async function Datasets({ params }: { params: { id: string } }) {
               <div style={{ position: "sticky", top: 30 }}>
                 <DownloadDataset
                   id={dataset.identifier}
-                  edition="2022-01"
-                  version="1"
+                  csvDownloadUrl={latestVersion.download_url}
                   date={dataset.issued}
                 />
                 <div className="app-download-dataset">
@@ -290,28 +289,32 @@ export default async function Datasets({ params }: { params: { id: string } }) {
               Data preview
             </h1>
             <div className="app-preview-table">
-            <table className="govuk-table">
-              <thead className="govuk-table__head">
-                <tr className="govuk-table__row">
-                  {csvData[0].map((field, index) => (
-                    <th key={index} scope="col" className="govuk-table__header">
-                      {field}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="govuk-table__body">
-                {csvData.slice(1).map((row, rowIndex) => (
-                  <tr key={rowIndex} className="govuk-table__row">
-                    {row.map((cell, colIndex) => (
-                      <td key={colIndex} className="govuk-table__cell">
-                        {cell}
-                      </td>
+              <table className="govuk-table">
+                <thead className="govuk-table__head">
+                  <tr className="govuk-table__row">
+                    {csvData[0].map((field, index) => (
+                      <th
+                        key={index}
+                        scope="col"
+                        className="govuk-table__header"
+                      >
+                        {field}
+                      </th>
                     ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="govuk-table__body">
+                  {csvData.slice(1).map((row, rowIndex) => (
+                    <tr key={rowIndex} className="govuk-table__row">
+                      {row.map((cell, colIndex) => (
+                        <td key={colIndex} className="govuk-table__cell">
+                          {cell}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </section>
           <section className="govuk-!-margin-top-7">
@@ -336,39 +339,41 @@ export default async function Datasets({ params }: { params: { id: string } }) {
                 </tr>
               </thead>
               <tbody className="govuk-table__body">
-                {metadata.map((item: {
-                  name: string,
-                  titles: string,
-                  datatype: string,
-                  description: string
-                }) => {
-                  return (
-                    <>
-                      <tr className="govuk-table__row">
-                        <th
-                          scope="row"
-                          className="govuk-table__header app-metadata-table__header"
-                        >
-                          {item.titles}
-                        </th>
-                        <td className="govuk-table__cell app-metadata-table__cell">
-                          {item.datatype}
-                        </td>
-                        <td className="govuk-table__cell app-metadata-table__cell--visible">
-                          {item.description}
-                        </td>
-                      </tr>
-                      <tr className="govuk-table__row">
-                        <td
-                          colSpan={2}
-                          className="govuk-table__cell app-metadata-table__cell--mobile-visible"
-                        >
-                          {item.description}
-                        </td>
-                      </tr>
-                    </>
-                  );
-                })}
+                {metadata.map(
+                  (item: {
+                    name: string;
+                    titles: string;
+                    datatype: string;
+                    description: string;
+                  }) => {
+                    return (
+                      <>
+                        <tr className="govuk-table__row">
+                          <th
+                            scope="row"
+                            className="govuk-table__header app-metadata-table__header"
+                          >
+                            {item.titles}
+                          </th>
+                          <td className="govuk-table__cell app-metadata-table__cell">
+                            {item.datatype}
+                          </td>
+                          <td className="govuk-table__cell app-metadata-table__cell--visible">
+                            {item.description}
+                          </td>
+                        </tr>
+                        <tr className="govuk-table__row">
+                          <td
+                            colSpan={2}
+                            className="govuk-table__cell app-metadata-table__cell--mobile-visible"
+                          >
+                            {item.description}
+                          </td>
+                        </tr>
+                      </>
+                    );
+                  }
+                )}
               </tbody>
             </table>
           </section>

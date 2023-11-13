@@ -1,16 +1,14 @@
 "use client";
-import { getDatasetCSV } from "@/libs/dataRequests";
+import { getDatasetCsv } from "@/libs/dataRequests";
 
 const DownloadDataset = ({
   id,
-  edition,
-  version,
   date,
+  csvDownloadUrl,
 }: {
   id: string;
-  edition: string;
-  version: string;
   date: string;
+  csvDownloadUrl: string;
 }) => {
   async function downloadCSV() {
     const formatDate = (input: string) => {
@@ -23,7 +21,7 @@ const DownloadDataset = ({
       return `${year}-${month}`;
     };
 
-    const response = await getDatasetCSV(id, edition, version);
+    const response = await getDatasetCsv(csvDownloadUrl);
     // Create a Blob containing the CSV data
     const blob = new Blob([response], { type: "text/csv" });
 
