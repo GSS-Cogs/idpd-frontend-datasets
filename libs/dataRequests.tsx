@@ -18,7 +18,7 @@ async function getCsvPreview(url: string): Promise<string[][]> {
     const lines = csvData.split('\n').slice(0, 10); // Get the first 10 lines
 
     // Parse each line into an array of values
-    const data = lines.map((line) => line.split(','));
+    const data = lines.map((line: string) => line.split(','));
 
     return data;
   } catch (error) {
@@ -102,32 +102,32 @@ const getDataset = async (id: string) => {
   return data;
 };
 
-const getDatasetLatestEditionUrl = async (dataset_id: string) => {
+const getDatasetLatestEditionUrl = async (datasetId: string) => {
   /*
-  Given a dataset id, returns the (short form - just whats show at
-  the datasets) metadata document for the latest edition of that dataset.
+  Given a dataset id, returns the url for the latest
+  edition of that dataset.
   */
-  const data = await fetchData(`/datasets/${dataset_id}`, "GET")
+  const data = await fetchData(`/datasets/${datasetId}`, "GET")
   return data.editions[0]["@id"]
 }
 
-const getEditionLatestVersionMetadata = async (edition_url: string) => {
+const getEditionLatestVersionMetadata = async (editionUrl: string) => {
   /*
   Given a dataset_id and an edtion_id, returns the metadata
   for the latest version.
   */
-  const data = await fetchData(edition_url, "GET")
+  const data = await fetchData(editionUrl, "GET")
   const latestVersionId = data.versions[0]["@id"]
   const latestVersionDocument = await fetchData(latestVersionId, "GET")
   return latestVersionDocument
 }
 
-const getLatestDatasetEditionVersionMetadata = async (dataset_id: string) => {
+const getDatasetLatestEditionLatestVersionMetadata = async (datasetID: string) => {
   /*
   Given a dataset_id, retrieve metadata document of latest version
   of the latest edition of the dataset.
   */
-  const latestEditionUrl = await getDatasetLatestEditionUrl(dataset_id)
+  const latestEditionUrl = await getDatasetLatestEditionUrl(datasetID)
   const latestEditionVersionMetadata = await getEditionLatestVersionMetadata(latestEditionUrl)
   return latestEditionVersionMetadata
 }
@@ -198,7 +198,7 @@ export {
   getDataset,
   getDatasetLatestEditionUrl,
   getEditionLatestVersionMetadata,
-  getLatestDatasetEditionVersionMetadata,
+  getDatasetLatestEditionLatestVersionMetadata,
   getDatasetCSV,
   getDatasetWithSpatialCoverageInfo,
   getTopics,

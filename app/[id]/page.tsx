@@ -4,7 +4,7 @@ import PhaseBanner from "@/components/PhaseBanner";
 import { 
   getCsvPreview,
   getDatasetWithSpatialCoverageInfo,
-  getLatestDatasetEditionVersionMetadata,
+  getDatasetLatestEditionLatestVersionMetadata,
   getPublisher
 } from "../../libs/dataRequests";
 import Image from "next/image";
@@ -17,13 +17,13 @@ export default async function Datasets({ params }: { params: { id: string } }) {
   const dataset = await getDatasetWithSpatialCoverageInfo(params.id);
 
   // Get the latest version of the latest edition of this dataset
-  const latestVersion = await getLatestDatasetEditionVersionMetadata(params.id);
+  const latestVersion = await getDatasetLatestEditionLatestVersionMetadata(params.id);
   
   // Get column metadata from this version
   const metadata = latestVersion.table_schema.columns
 
   // Get a 10 lines preview of the csv asociated with this version
-  const csv_data = await getCsvPreview(latestVersion.download_url)
+  const csvData = await getCsvPreview(latestVersion.download_url)
   const splitPub = dataset.publisher.split("/");
   const result = splitPub[splitPub.length - 1];
   const publisher = await getPublisher(result);
@@ -293,7 +293,7 @@ export default async function Datasets({ params }: { params: { id: string } }) {
             <table className="govuk-table">
               <thead className="govuk-table__head">
                 <tr className="govuk-table__row">
-                  {csv_data[0].map((field, index) => (
+                  {csvData[0].map((field, index) => (
                     <th key={index} scope="col" className="govuk-table__header">
                       {field}
                     </th>
@@ -301,7 +301,7 @@ export default async function Datasets({ params }: { params: { id: string } }) {
                 </tr>
               </thead>
               <tbody className="govuk-table__body">
-                {csv_data.slice(1).map((row, rowIndex) => (
+                {csvData.slice(1).map((row, rowIndex) => (
                   <tr key={rowIndex} className="govuk-table__row">
                     {row.map((cell, colIndex) => (
                       <td key={colIndex} className="govuk-table__cell">
@@ -321,9 +321,6 @@ export default async function Datasets({ params }: { params: { id: string } }) {
             <table className="govuk-table">
               <thead className="govuk-table__head">
                 <tr className="govuk-table__row">
-                <th scope="col" className="govuk-table__header">
-                    Column
-                  </th>
                   <th scope="col" className="govuk-table__header">
                     Field
                   </th>
@@ -343,12 +340,6 @@ export default async function Datasets({ params }: { params: { id: string } }) {
                   return (
                     <>
                       <tr className="govuk-table__row">
-                      <th
-                          scope="row"
-                          className="govuk-table__header app-metadata-table__header"
-                        >
-                          {item.name}
-                        </th>
                         <th
                           scope="row"
                           className="govuk-table__header app-metadata-table__header"
