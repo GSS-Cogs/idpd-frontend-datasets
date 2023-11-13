@@ -1,138 +1,29 @@
 import "./datasets.scss";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import PhaseBanner from "@/components/PhaseBanner";
-import {
+import { 
+  getCsvPreview,
   getDatasetWithSpatialCoverageInfo,
-  getPublisher,
+  getDatasetLatestEditionLatestVersionMetadata,
+  getPublisher
 } from "../../libs/dataRequests";
 import Image from "next/image";
 import DownloadDataset from "@/components/DownloadDataset";
 
-const metadata = [
-  {
-    field: "Statistical geography",
-    type: "String",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam id neque at ex accumsan dictum at non tellus. Fusce sagittis, ligula eu condimentum commodo, magna nisi cursus mi, ut sagittis orci elit id orci.",
-  },
-  {
-    field: "Measure type",
-    type: "String",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam id neque at ex accumsan dictum at non tellus. Fusce sagittis, ligula eu condimentum commodo, magna nisi cursus mi, ut sagittis orci elit id orci.",
-  },
-  {
-    field: "Gregorian time interval",
-    type: "Date/Time",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam id neque at ex accumsan dictum at non tellus. Fusce sagittis, ligula eu condimentum commodo, magna nisi cursus mi, ut sagittis orci elit id orci.",
-  },
-  {
-    field: "Pupils eligible for free school meals with persistent absences",
-    type: "String",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam id neque at ex accumsan dictum at non tellus. Fusce sagittis, ligula eu condimentum commodo, magna nisi cursus mi, ut sagittis orci elit id orci.",
-  },
-  {
-    field: "Unit of measure",
-    type: "String",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam id neque at ex accumsan dictum at non tellus. Fusce sagittis, ligula eu condimentum commodo, magna nisi cursus mi, ut sagittis orci elit id orci.",
-  },
-  {
-    field: "Upper confidence interval",
-    type: "String",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam id neque at ex accumsan dictum at non tellus. Fusce sagittis, ligula eu condimentum commodo, magna nisi cursus mi, ut sagittis orci elit id orci.",
-  },
-  {
-    field: "Lower confidence interval",
-    type: "String",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam id neque at ex accumsan dictum at non tellus. Fusce sagittis, ligula eu condimentum commodo, magna nisi cursus mi, ut sagittis orci elit id orci.",
-  },
-];
-
-const data = [
-  {
-    field: "Statistical Geography",
-    values: [
-      "North East",
-      "North East",
-      "England",
-      "County Durham",
-      "England",
-      "North East",
-      "Darlington",
-      "Darlington",
-      "England",
-      "England",
-    ],
-  },
-  {
-    field: "Measure type",
-    values: [
-      "Pupils eligible for free school meals with persistent absences",
-      "Pupils eligible for free school meals with persistent absences",
-      "Pupils eligible for free school meals with persistent absences",
-      "Pupils eligible for free school meals with persistent absences",
-      "Pupils eligible for free school meals with persistent absences",
-      "Pupils eligible for free school meals with persistent absences",
-      "Pupils eligible for free school meals with persistent absences",
-      "Pupils eligible for free school meals with persistent absences",
-      "Pupils eligible for free school meals with persistent absences",
-      "Pupils eligible for free school meals with persistent absences",
-    ],
-  },
-  {
-    field: "Gregorian time interval",
-    values: [
-      "2017-08-01T00:00:00/P1Y",
-      "2017-08-01T00:00:00/P1Y",
-      "2017-08-01T00:00:00/P1Y",
-      "2017-08-01T00:00:00/P1Y",
-      "2017-08-01T00:00:00/P1Y",
-      "2017-08-01T00:00:00/P1Y",
-      "2017-08-01T00:00:00/P1Y",
-      "2017-08-01T00:00:00/P1Y",
-      "2017-08-01T00:00:00/P1Y",
-      "2017-08-01T00:00:00/P1Y",
-    ],
-  },
-  {
-    field: "Pupils eligible for free school meals with persistent absences",
-    values: [
-      "21.20165",
-      "23.01075",
-      "23.20222",
-      "39.96234",
-      "20.56852",
-      "quarter/2011-Q1",
-      "quarter/2022-Q3",
-      "quarter/2012-Q1",
-      "quarter/2019-Q2",
-      "quarter/2015-Q1",
-    ],
-  },
-  {
-    field: "Location",
-    values: [
-      "England and Wales",
-      "England and Wales",
-      "England and Wales",
-      "England and Wales",
-      "England and Wales",
-      "England and Wales",
-      "England and Wales",
-      "England and Wales",
-      "England and Wales",
-      "England and Wales",
-    ],
-  },
-];
 
 export default async function Datasets({ params }: { params: { id: string } }) {
+  
+  // Get high level dataset data
   const dataset = await getDatasetWithSpatialCoverageInfo(params.id);
+
+  // Get the latest version of the latest edition of this dataset
+  const latestVersion = await getDatasetLatestEditionLatestVersionMetadata(params.id);
+  
+  // Get column metadata from this version
+  const metadata = latestVersion.table_schema.columns
+
+  // Get a 10 lines preview of the csv asociated with this version
+  const csvData = await getCsvPreview(latestVersion.download_url)
   const splitPub = dataset.publisher.split("/");
   const result = splitPub[splitPub.length - 1];
   const publisher = await getPublisher(result);
@@ -399,38 +290,28 @@ export default async function Datasets({ params }: { params: { id: string } }) {
               Data preview
             </h1>
             <div className="app-preview-table">
-              <table className="govuk-table">
-                <thead className="govuk-table__head">
-                  <tr className="govuk-table__row">
-                    {data.map((item) => {
-                      return (
-                        <th
-                          scope="col"
-                          className="govuk-table__header"
-                          key={item.field}
-                        >
-                          {item.field}
-                        </th>
-                      );
-                    })}
+            <table className="govuk-table">
+              <thead className="govuk-table__head">
+                <tr className="govuk-table__row">
+                  {csvData[0].map((field, index) => (
+                    <th key={index} scope="col" className="govuk-table__header">
+                      {field}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="govuk-table__body">
+                {csvData.slice(1).map((row, rowIndex) => (
+                  <tr key={rowIndex} className="govuk-table__row">
+                    {row.map((cell, colIndex) => (
+                      <td key={colIndex} className="govuk-table__cell">
+                        {cell}
+                      </td>
+                    ))}
                   </tr>
-                </thead>
-                <tbody className="govuk-table__body">
-                  {data[0].values.map((_, rowIndex) => {
-                    return (
-                      <tr key={rowIndex} className="govuk-table__row">
-                        {data.map((item, colIndex) => {
-                          return (
-                            <td key={colIndex} className="govuk-table__cell">
-                              {item.values[rowIndex]}
-                            </td>
-                          );
-                        })}
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+                ))}
+              </tbody>
+            </table>
             </div>
           </section>
           <section className="govuk-!-margin-top-7">
@@ -455,7 +336,12 @@ export default async function Datasets({ params }: { params: { id: string } }) {
                 </tr>
               </thead>
               <tbody className="govuk-table__body">
-                {metadata.map((item) => {
+                {metadata.map((item: {
+                  name: string,
+                  titles: string,
+                  datatype: string,
+                  description: string
+                }) => {
                   return (
                     <>
                       <tr className="govuk-table__row">
@@ -463,10 +349,10 @@ export default async function Datasets({ params }: { params: { id: string } }) {
                           scope="row"
                           className="govuk-table__header app-metadata-table__header"
                         >
-                          {item.field}
+                          {item.titles}
                         </th>
                         <td className="govuk-table__cell app-metadata-table__cell">
-                          {item.type}
+                          {item.datatype}
                         </td>
                         <td className="govuk-table__cell app-metadata-table__cell--visible">
                           {item.description}
