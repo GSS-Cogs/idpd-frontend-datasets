@@ -31,18 +31,12 @@ const getDatasetCsv = async (url: string) => {
   try {
     const options: RequestInit = {
       method: "GET",
-      headers: {
-        Accept: "text/csv",
-      },
+      headers: getHeaders("text/csv"),
       // credentials: "include",
       credentials: "same-origin",
     };
 
-    const response = await fetch(
-      // `${BACKEND_URL}/datasets/cpih/editions/2022-01/versions/1.csv`,
-      "https://staging.idpd.uk/datasets/cpih/editions/2022-01/versions/1.csv",
-      options
-    );
+    const response = await fetch(url, options);
     return response.text();
   } catch (error) {
     console.error("Fetch Error:", error);
