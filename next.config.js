@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   basePath: "/datasets",
+  experimental: {
+    serverActions: true,
+  },
   async headers() {
     return [
       {

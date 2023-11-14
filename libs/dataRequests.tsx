@@ -1,3 +1,4 @@
+"use server";
 import { redirect } from "next/navigation";
 
 const USERNAME = process.env.NEXT_PRIVATE_USERNAME;
@@ -26,19 +27,60 @@ async function getCsvPreview(url: string): Promise<string[][]> {
   }
 }
 
-async function getDatasetCsv(url: string): Promise<string> {
-  /*
-    Get given datasets csv data
-  */
+const getDatasetCsv = async (url: string) => {
   try {
-    const response = await fetchData(url, "GET", "text/csv");
-    const csvData = await response.text();
+    const options: RequestInit = {
+      method: "GET",
+      headers: {
+        Accept: "text/csv",
+      },
+      // credentials: "include",
+      credentials: "same-origin",
+    };
 
-    return csvData;
+    const response = await fetch(
+      // `${BACKEND_URL}/datasets/cpih/editions/2022-01/versions/1.csv`,
+      "https://staging.idpd.uk/datasets/cpih/editions/2022-01/versions/1.csv",
+      options
+    );
+    return response.text();
   } catch (error) {
-    throw error; // You can throw an error for handling it in the caller
+    console.error("Fetch Error:", error);
+    throw error;
   }
-}
+};
+
+// const getDatasetCSV = async (url: string) => {
+//   try {
+//     const options: RequestInit = {
+//       method: "GET",
+//       headers: {
+//         Accept: "text/csv",
+//       },
+//       credentials: "include",
+//     };
+
+//     const response = await fetch(url, options);
+//     return response.text();
+//   } catch (error) {
+//     console.error("Fetch Error:", error);
+//     throw error;
+//   }
+// };
+
+// async function getDatasetCsv(url: string) {
+//   /*
+//     Get given datasets csv data
+//   */
+//   try {
+//     const response = await fetchData(url, "GET", "text/csv");
+//     const csvData = await response.text();
+
+//     return csvData;
+//   } catch (error) {
+//     throw error; // You can throw an error for handling it in the caller
+//   }
+// }
 
 const getHeaders = (mimeType: string) => {
   const headers: Record<string, string> = {
