@@ -7,7 +7,7 @@ import idsLogo from "../../public/assets/images/ids/IDS_logo_landscape_WHITE.svg
 import topicItems from "../../app/data/topicItems.json";
 
 const popularItems = [
-  { text: "About the data service", href: "" },
+  { text: "About the data service", href: "/" },
   { text: "IDS Hub", href: "https://integrateddataservice.gov.uk/" },
   {
     text: "Climate change portal",
