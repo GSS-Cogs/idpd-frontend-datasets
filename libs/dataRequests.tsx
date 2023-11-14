@@ -40,38 +40,6 @@ const getDatasetCsv = async (url: string) => {
   }
 };
 
-// const getDatasetCSV = async (url: string) => {
-//   try {
-//     const options: RequestInit = {
-//       method: "GET",
-//       headers: {
-//         Accept: "text/csv",
-//       },
-//       credentials: "include",
-//     };
-
-//     const response = await fetch(url, options);
-//     return response.text();
-//   } catch (error) {
-//     console.error("Fetch Error:", error);
-//     throw error;
-//   }
-// };
-
-// async function getDatasetCsv(url: string) {
-//   /*
-//     Get given datasets csv data
-//   */
-//   try {
-//     const response = await fetchData(url, "GET", "text/csv");
-//     const csvData = await response.text();
-
-//     return csvData;
-//   } catch (error) {
-//     throw error; // You can throw an error for handling it in the caller
-//   }
-// }
-
 const getHeaders = (mimeType: string) => {
   const headers: Record<string, string> = {
     Accept: mimeType,
