@@ -1,5 +1,7 @@
 "use client";
 import { getCsvPreview, getDatasetCsv } from "@/libs/dataRequests";
+import Image from "next/image";
+import csvImg from "../../public/assets/images/csv-icon.svg";
 
 const DownloadDataset = ({
   id,
@@ -54,47 +56,14 @@ const DownloadDataset = ({
       <h2 className="govuk-heading-m">Download dataset</h2>
       <div className="app-download-dataset-content">
         <div className="app-download-dataset-content__image">
-          <div
-            style={{
-              width: "100%",
-              height: 20,
-              backgroundColor: "#B1B4B6",
-              marginBottom: 10,
-            }}
-          ></div>
-          <table
-            style={{
-              borderCollapse: "collapse",
-              width: "100%",
-              height: "75%",
-            }}
-          >
-            <tbody>
-              {Array.from({ length: 6 }).map((_, row) => (
-                <tr key={row}>
-                  {Array.from({ length: 4 }).map((_, col) => (
-                    <td
-                      key={col}
-                      style={
-                        col === 0
-                          ? {
-                              border: "2px solid #B1B4B6",
-                              textAlign: "center",
-                              backgroundColor: "#B1B4B6",
-                              color: "white",
-                            }
-                          : {
-                              border: "2px solid #B1B4B6",
-                              textAlign: "center",
-                            }
-                      }
-                    ></td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <Image
+            src={"/datasets/assets/images/csv-icon.svg"}
+            width={90}
+            height={120}
+            alt="icon for csv download"
+          />
         </div>
+
         <div className="app-download-dataset-content__text-wrapper">
           <p className="govuk-body">
             Download the dataset in CSV format for use in the tool or
