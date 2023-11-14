@@ -1,16 +1,15 @@
 "use client";
-import { getDatasetCSV } from "@/libs/dataRequests";
+import { getDatasetCsv } from "@/libs/dataRequests";
+import Image from "next/image";
 
 const DownloadDataset = ({
   id,
-  edition,
-  version,
   date,
+  csvDownloadUrl,
 }: {
   id: string;
-  edition: string;
-  version: string;
   date: string;
+  csvDownloadUrl: string;
 }) => {
   async function downloadCSV() {
     const formatDate = (input: string) => {
@@ -23,8 +22,7 @@ const DownloadDataset = ({
       return `${year}-${month}`;
     };
 
-    const response = await getDatasetCSV(id, edition, version);
-    // Create a Blob containing the CSV data
+    const response = await getDatasetCsv(csvDownloadUrl);
     const blob = new Blob([response], { type: "text/csv" });
 
     // Create a URL for the Blob
@@ -47,47 +45,14 @@ const DownloadDataset = ({
       <h2 className="govuk-heading-m">Download dataset</h2>
       <div className="app-download-dataset-content">
         <div className="app-download-dataset-content__image">
-          <div
-            style={{
-              width: "100%",
-              height: 20,
-              backgroundColor: "#B1B4B6",
-              marginBottom: 10,
-            }}
-          ></div>
-          <table
-            style={{
-              borderCollapse: "collapse",
-              width: "100%",
-              height: "75%",
-            }}
-          >
-            <tbody>
-              {Array.from({ length: 6 }).map((_, row) => (
-                <tr key={row}>
-                  {Array.from({ length: 4 }).map((_, col) => (
-                    <td
-                      key={col}
-                      style={
-                        col === 0
-                          ? {
-                              border: "2px solid #B1B4B6",
-                              textAlign: "center",
-                              backgroundColor: "#B1B4B6",
-                              color: "white",
-                            }
-                          : {
-                              border: "2px solid #B1B4B6",
-                              textAlign: "center",
-                            }
-                      }
-                    ></td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <Image
+            src={"/datasets/assets/images/csv-icon.svg"}
+            width={90}
+            height={120}
+            alt="icon for csv download"
+          />
         </div>
+
         <div className="app-download-dataset-content__text-wrapper">
           <p className="govuk-body">
             Download the dataset in CSV format for use in the tool or
