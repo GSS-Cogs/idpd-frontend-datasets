@@ -1,5 +1,5 @@
 "use client";
-import { getDatasetCsv } from "@/libs/dataRequests";
+import { getCsvPreview, getDatasetCsv } from "@/libs/dataRequests";
 
 const DownloadDataset = ({
   id,
@@ -21,23 +21,32 @@ const DownloadDataset = ({
       return `${year}-${month}`;
     };
 
-    const response = await getDatasetCsv(csvDownloadUrl);
+    // const response = await getDatasetCsv(csvDownloadUrl);
+    // const csvData = await getCsvPreview(csvDownloadUrl);
+    // Open a new window/tab and start the download
+    const newWindow = window.open(csvDownloadUrl, "_blank");
+
+    setTimeout(() => {
+      if (newWindow && !newWindow.closed) {
+        newWindow.close();
+      }
+    }, 100);
     // Create a Blob containing the CSV data
-    const blob = new Blob([response], { type: "text/csv" });
+    // const blob = new Blob([response], { type: "text/csv" });
 
-    // Create a URL for the Blob
-    const url = URL.createObjectURL(blob);
-    const formattedDate = formatDate(date);
-    // Create an invisible <a> element to trigger the download
-    const a = document.createElement("a");
-    a.style.display = "none";
-    a.href = url;
-    a.download = id + "_" + formattedDate + ".csv";
+    // // Create a URL for the Blob
+    // const url = URL.createObjectURL(blob);
+    // const formattedDate = formatDate(date);
+    // // Create an invisible <a> element to trigger the download
+    // const a = document.createElement("a");
+    // a.style.display = "none";
+    // a.href = url;
+    // a.download = id + "_" + formattedDate + ".csv";
 
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    // document.body.appendChild(a);
+    // a.click();
+    // document.body.removeChild(a);
+    // URL.revokeObjectURL(url);
   }
 
   return (
