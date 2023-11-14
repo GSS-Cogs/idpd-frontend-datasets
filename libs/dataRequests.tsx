@@ -84,6 +84,7 @@ const fetchData = async (
       method,
       headers: getHeaders(mimeType),
       credentials: "include",
+      next: { revalidate: 600 }, // revalidate at most every 10 minutes
     };
 
     let fetchURL;
