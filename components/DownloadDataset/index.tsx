@@ -1,7 +1,6 @@
 "use client";
-import { getCsvPreview, getDatasetCsv } from "@/libs/dataRequests";
+import { getDatasetCsv } from "@/libs/dataRequests";
 import Image from "next/image";
-import csvImg from "../../public/assets/images/csv-icon.svg";
 
 const DownloadDataset = ({
   id,
@@ -24,16 +23,6 @@ const DownloadDataset = ({
     };
 
     const response = await getDatasetCsv(csvDownloadUrl);
-    // const csvData = await getCsvPreview(csvDownloadUrl);
-    // Open a new window/tab and start the download
-    // const newWindow = window.open(csvDownloadUrl, "_blank");
-
-    // setTimeout(() => {
-    //   if (newWindow && !newWindow.closed) {
-    //     newWindow.close();
-    //   }
-    // }, 100);
-    // Create a Blob containing the CSV data
     const blob = new Blob([response], { type: "text/csv" });
 
     // Create a URL for the Blob

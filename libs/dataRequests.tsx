@@ -28,16 +28,12 @@ async function getCsvPreview(url: string): Promise<string[][]> {
 }
 
 const getDatasetCsv = async (url: string) => {
+  /*
+    Get full csv data for downloading
+  */
   try {
-    const options: RequestInit = {
-      method: "GET",
-      headers: getHeaders("text/csv"),
-      // credentials: "include",
-      credentials: "same-origin",
-    };
-
-    const response = await fetch(url, options);
-    return response.text();
+    const data = await fetchData(url, "GET", "text/csv");
+    return data.text();
   } catch (error) {
     console.error("Fetch Error:", error);
     throw error;
