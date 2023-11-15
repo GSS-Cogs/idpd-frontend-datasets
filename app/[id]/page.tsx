@@ -9,6 +9,7 @@ import {
 } from "../../libs/dataRequests";
 import Image from "next/image";
 import DownloadDataset from "@/components/DownloadDataset";
+import logoCompDict from "@/utils/logoCompDict";
 
 export default async function Datasets({ params }: { params: { id: string } }) {
   // Get high level dataset data
@@ -27,6 +28,8 @@ export default async function Datasets({ params }: { params: { id: string } }) {
   const splitPub = dataset.publisher.split("/");
   const result = splitPub[splitPub.length - 1];
   const publisher = await getPublisher(result);
+  const PublisherComponent =
+    logoCompDict[dataset.publisher] || logoCompDict["default"];
 
   function formatDate(date: string) {
     const d = new Date(date);
@@ -104,17 +107,7 @@ export default async function Datasets({ params }: { params: { id: string } }) {
               </h1>
               <div className="govuk-body">
                 <h3 className="govuk-heading-s">Publisher</h3>
-                <div className="app-datasets__publisher">
-                  <Image
-                    src="/assets/images/crest.png"
-                    width={40}
-                    height={34}
-                    alt="Govuk Crest"
-                  />
-                  <h3 className="app-datasets__publisher-text">
-                    {publisher.title}
-                  </h3>
-                </div>
+                <PublisherComponent title={publisher.title} />
                 <a className="govuk-link" href="#">
                   View more datasets by this publisher
                 </a>
