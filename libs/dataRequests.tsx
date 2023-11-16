@@ -6,24 +6,27 @@ const PASSWORD = process.env.NEXT_PRIVATE_PASSWORD;
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 async function getCsvPreview(url: string): Promise<string[][]> {
-  /*
-    Get a 10 line preview of a csv arranged as an
-    array of arrays.
-  */
-
   try {
     const response = await fetchData(url, "GET", "text/csv");
-    const csvData = await response.text();
+
+    const reader = response.body.getReader();
+    let result = await reader.read();
+    let csvData = '';
+
+    while (!result.done && csvData.split('\n').length <= 10) {
+      csvData += new TextDecoder().decode(result.value, { stream: true });
+      result = await reader.read();
+    }
 
     // Split the CSV data into lines
-    const lines = csvData.split("\n").slice(0, 10); // Get the first 10 lines
+    const lines = csvData.split('\n').slice(0, 10);
 
     // Parse each line into an array of values
-    const data = lines.map((line: string) => line.split(","));
+    const data = lines.map((line: string) => line.split(','));
 
     return data;
   } catch (error) {
-    throw error; // You can throw an error for handling it in the caller
+    throw error;
   }
 }
 
