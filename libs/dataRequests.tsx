@@ -13,7 +13,7 @@ async function getCsvPreview(url: string): Promise<string[][]> {
     let result = await reader.read();
     let csvData = '';
 
-    while (!result.done && csvData.split('\n').length <= 10) {
+    while (!result.done && csvData.split("\n").length <= 10) {
       csvData += new TextDecoder().decode(result.value, { stream: true });
       result = await reader.read();
     }
@@ -22,7 +22,7 @@ async function getCsvPreview(url: string): Promise<string[][]> {
     const lines = csvData.split('\n').slice(0, 10);
 
     // Parse each line into an array of values
-    const data = lines.map((line: string) => line.split(','));
+    const data = lines.map((line: string) => line.split(","));
 
     return data;
   } catch (error) {
