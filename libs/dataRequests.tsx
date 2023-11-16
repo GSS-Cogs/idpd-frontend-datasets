@@ -19,7 +19,7 @@ async function getCsvPreview(url: string): Promise<string[][]> {
     }
 
     // Split the CSV data into lines
-    const lines = csvData.split('\n').slice(0, 10);
+    const lines = csvData.split("\n").slice(0, 10);
 
     // Parse each line into an array of values
     const data = lines.map((line: string) => line.split(","));
