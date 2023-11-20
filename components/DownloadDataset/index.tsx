@@ -58,7 +58,6 @@ const DownloadDataset = ({
             Download the dataset in CSV format for use in the tool or
             application of your choice.
           </p>
-          <p className="govuk-body">CSV, 110KB</p>
         </div>
       </div>
       <button

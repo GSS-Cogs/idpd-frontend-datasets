@@ -91,11 +91,6 @@ export default async function Datasets({ params }: { params: { id: string } }) {
                   Structural metadata
                 </a>
               </li>
-              <li className="app-datasets__list-item">
-                <a className="govuk-link" href="#related">
-                  Related datasets
-                </a>
-              </li>
             </ul>
           </div>
           <SectionBreak />
