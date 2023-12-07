@@ -112,8 +112,8 @@ export default async function Datasets({ params }: { params: { id: string } }) {
                 <h3 className="govuk-heading-s">Contact</h3>
                 <div className="govuk-body">
                   {dataset.contact_point.name} -{" "}
-                  <a className="govuk-link" href="#">
-                    {dataset.contact_point.email}
+                  <a className="govuk-link" href={`mailto:${dataset.contact_point.email}`}>
+                  {dataset.contact_point.email.replace(/^mailto:/i, "")}
                   </a>
                 </div>
               </div>
