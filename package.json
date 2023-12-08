@@ -18,10 +18,12 @@
     "moment": "^2.29.4",
     "next": "13.4.8",
     "next-logger": "^3.0.2",
-    "pino-pretty": "^10.2.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "sass": "^1.69.3",
     "typescript": "5.2.2"
+  },
+  "devDependencies": {
+    "pino-pretty": "^10.2.3"
   }
 }
