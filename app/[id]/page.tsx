@@ -23,6 +23,9 @@ export default async function Datasets({ params }: { params: { id: string } }) {
   // Get column metadata from this version
   const metadata = latestVersion.table_schema.columns;
 
+  // Get the email from dataset, removing 'mailto:' prefix if present
+  const contactEmail = dataset.contact_point.email ? dataset.contact_point.email.replace(/^mailto:/i, "") : "";
+
   // Get a 10 lines preview of the csv asociated with this version
   const csvData = await getCsvPreview(latestVersion.download_url);
   const splitPub = dataset.publisher.split("/");
@@ -112,9 +115,11 @@ export default async function Datasets({ params }: { params: { id: string } }) {
                 <h3 className="govuk-heading-s">Contact</h3>
                 <div className="govuk-body">
                   {dataset.contact_point.name} -{" "}
-                  <a className="govuk-link" href="#">
-                    {dataset.contact_point.email}
-                  </a>
+                  {dataset.contact_point.email && (
+                    <a className="govuk-link" href={`mailto:${contactEmail}`}>
+                      {contactEmail}
+                    </a>
+                  )}
                 </div>
               </div>
               <SectionBreak />
