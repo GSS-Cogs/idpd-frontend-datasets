@@ -166,7 +166,7 @@ export default async function Datasets({ params }: { params: { id: string } }) {
 
                   return (
                     <div className="govuk-body" key={lastSegment}>
-                      <a className="govuk-link" href={url}>
+                      <a className="govuk-link" href={'/' + lastSegment}>
                         {displayText}
                       </a>
                     </div>
