@@ -1,17 +1,53 @@
 "use server";
+import moment from "moment";
 import { redirect } from "next/navigation";
 
 const USERNAME = process.env.NEXT_PRIVATE_USERNAME;
 const PASSWORD = process.env.NEXT_PRIVATE_PASSWORD;
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
+const backendUrlSplit = BACKEND_URL?.split("://");
+const scheme = backendUrlSplit?.[0];
+const domain = backendUrlSplit?.[1];
+
+const logInfo = (message: string, method: string, url: string) => {
+  console.info({
+    event: message,
+    http: {
+      method: method,
+      scheme: scheme,
+      host: domain,
+      // port: // TODO add port number
+      path: url,
+      started_at: moment(new Date()).format("YYYY-MM-DDTHH:mm:ss.SSSZZ"),
+    },
+  });
+};
+
+const logError = (message: string, method: string, url: string) => {
+  console.error({
+    event: message,
+    http: {
+      method: method,
+      scheme: scheme,
+      host: domain,
+      // port: // TODO add port number
+      path: url,
+      started_at: moment(new Date()).format("YYYY-MM-DDTHH:mm:ss.SSSZZ"),
+    },
+  });
+};
+
 async function getCsvPreview(url: string): Promise<string[][]> {
+  logInfo(`fetching data from ${url}`, "GET", url);
   try {
     const response = await fetchData(url, "GET", "text/csv");
-
+    if (!response) {
+      return [[]];
+    }
     const reader = response.body.getReader();
     let result = await reader.read();
-    let csvData = '';
+    let csvData = "";
 
     while (!result.done && csvData.split("\n").length <= 10) {
       csvData += new TextDecoder().decode(result.value, { stream: true });
@@ -26,6 +62,7 @@ async function getCsvPreview(url: string): Promise<string[][]> {
 
     return data;
   } catch (error) {
+    logError(`failed fetch data from ${url}`, "GET", url);
     throw error;
   }
 }
@@ -34,11 +71,12 @@ const getDatasetCsv = async (url: string) => {
   /*
     Get full csv data for downloading
   */
+  logInfo(`fetching data from ${url}`, "GET", url);
   try {
     const data = await fetchData(url, "GET", "text/csv");
     return data.text();
   } catch (error) {
-    console.error("Fetch Error:", error);
+    logError(`failed fetch data from ${url}`, "GET", url);
     throw error;
   }
 };
@@ -57,12 +95,12 @@ const getHeaders = (mimeType: string) => {
 };
 
 const handleResponse = async (response: Response) => {
-  if (!response.ok) {
-    if (response.status === 404) {
-      redirect("/not-found");
-    }
-    redirect("/error");
-  }
+  // if (!response.ok) {
+  //   if (response.status === 404) {
+  //     redirect("/not-found");
+  //   }
+  //   redirect("/error");
+  // }
 
   const contentType = response.headers.get("content-type");
 
@@ -82,6 +120,7 @@ const fetchData = async (
   method: string,
   mimeType: string = "application/ld+json"
 ): Promise<any> => {
+  logInfo(`fetching data from ${url}`, method, url);
   try {
     const options: RequestInit = {
       method,
@@ -103,7 +142,7 @@ const fetchData = async (
     const response = await fetch(fetchURL, options);
     return handleResponse(response);
   } catch (error) {
-    console.error("Fetch Error:", error);
+    logError(`failed fetch data from ${url}`, method, url);
     throw error;
   }
 };
