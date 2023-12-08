@@ -161,13 +161,13 @@ export default async function Datasets({ params }: { params: { id: string } }) {
 
                 {dataset.topics.map((url: string) => {
                   const segments = url.split('/');
-                  const lastSegment = segments[segments.length - 1];
-                  const displayText = lastSegment.replace(/-/g, ' ');
+                  const LastSegment = segments[segments.length - 1];
+                  const DisplayText = LastSegment.replace(/-/g, ' ');
 
                   return (
-                    <div className="govuk-body" key={lastSegment}>
-                      <a className="govuk-link" href={'/' + lastSegment}>
-                        {displayText}
+                    <div className="govuk-body" key={LastSegment}>
+                      <a className="govuk-link" href={'/' + LastSegment}>
+                        {DisplayText}
                       </a>
                     </div>
                   );
