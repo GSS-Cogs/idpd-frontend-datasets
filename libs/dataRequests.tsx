@@ -42,9 +42,6 @@ async function getCsvPreview(url: string): Promise<string[][]> {
   logInfo(`fetching data from ${url}`, "GET", url);
   try {
     const response = await fetchData(url, "GET", "text/csv");
-    if (!response) {
-      return [[]];
-    }
     const reader = response.body.getReader();
     let result = await reader.read();
     let csvData = "";
@@ -95,12 +92,12 @@ const getHeaders = (mimeType: string) => {
 };
 
 const handleResponse = async (response: Response) => {
-  // if (!response.ok) {
-  //   if (response.status === 404) {
-  //     redirect("/not-found");
-  //   }
-  //   redirect("/error");
-  // }
+  if (!response.ok) {
+    if (response.status === 404) {
+      redirect("/not-found");
+    }
+    redirect("/error");
+  }
 
   const contentType = response.headers.get("content-type");
 
