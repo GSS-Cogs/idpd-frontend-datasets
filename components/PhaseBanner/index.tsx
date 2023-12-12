@@ -17,7 +17,6 @@ export default function PhaseBanner({
     <div
       className={`govuk-phase-banner ${className || ""}`}
       {...attributes}
-      style={{ marginTop: 10 }}
     >
       <p className="govuk-phase-banner__content">
         <Tag
