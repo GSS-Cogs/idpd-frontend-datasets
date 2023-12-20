@@ -11,7 +11,7 @@ async function getCsvPreview(url: string): Promise<string[][]> {
 
     const reader = response.body.getReader();
     let result = await reader.read();
-    let csvData = '';
+    let csvData = "";
 
     while (!result.done && csvData.split("\n").length <= 10) {
       csvData += new TextDecoder().decode(result.value, { stream: true });
@@ -163,13 +163,20 @@ const getDatasetWithSpatialCoverageInfo = async (id: string) => {
   // which is the corresponding name of the given coverage code
   // e.g. K02000001 -> United Kingdom
   const data = await fetchData(`/datasets/${id}`, "GET");
-  const code = data.spatial_coverage;
 
-  const response = await handleResponse(
-    await fetch(`https://findthatpostcode.uk/areas/${code}.json`)
+  const geoportalCodes = await handleResponse(
+    await fetch(
+      "https://opendata.arcgis.com/datasets/33a3c8eadd084ac38d20ff3dcfa110ce_0/FeatureServer/0/query?outFields=*&where=1%3D1"
+    )
   );
 
-  const coverage = response.data.attributes.name;
+  let coverage = "UNKNOWN";
+  for (const feature of geoportalCodes.features) {
+    if (feature.attributes.CTRY15CD === data.spatial_coverage) {
+      coverage = feature.attributes.CTRY15NM;
+      break;
+    }
+  }
 
   data.spatial_coverage_name = coverage;
 
