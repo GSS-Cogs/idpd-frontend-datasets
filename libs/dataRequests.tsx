@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 const USERNAME = process.env.NEXT_PRIVATE_USERNAME;
 const PASSWORD = process.env.NEXT_PRIVATE_PASSWORD;
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+const BACKEND_PORT = process.env.NEXT_PUBLIC_BACKEND_PORT || "";
 
 const backendUrlSplit = BACKEND_URL?.split("://");
 const scheme = backendUrlSplit?.[0];
@@ -17,7 +18,7 @@ const logInfo = (message: string, method: string, url: string) => {
       method: method,
       scheme: scheme,
       host: domain,
-      // port: // TODO add port number
+      port: BACKEND_PORT,
       path: url,
       started_at: moment(new Date()).format("YYYY-MM-DDTHH:mm:ss.SSSZZ"),
     },
@@ -32,7 +33,7 @@ const logError = (message: string, method: string, url: string, error: any) => {
       method: method,
       scheme: scheme,
       host: domain,
-      // port: // TODO add port number
+      port: BACKEND_PORT,
       path: url,
       started_at: moment(new Date()).format("YYYY-MM-DDTHH:mm:ss.SSSZZ"),
     },
