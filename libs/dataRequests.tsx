@@ -198,15 +198,23 @@ const getDatasetWithSpatialCoverageInfo = async (id: string) => {
   // this function gets the dataset like normal then adds a new field 'spatial_coverage_name' to it
   // which is the corresponding name of the given coverage code
   // e.g. K02000001 -> United Kingdom
+
   try {
     const data = await fetchData(`/datasets/${id}`, "GET");
-    const code = data.spatial_coverage;
 
-    const response = await handleResponse(
-      await fetch(`https://findthatpostcode.uk/areas/${code}.json`)
+    const geoportalCodes = await handleResponse(
+      await fetch(
+        "https://opendata.arcgis.com/datasets/33a3c8eadd084ac38d20ff3dcfa110ce_0/FeatureServer/0/query?outFields=*&where=1%3D1"
+      )
     );
 
-    const coverage = response.data.attributes.name;
+    let coverage = "UNKNOWN";
+    for (const feature of geoportalCodes.features) {
+      if (feature.attributes.CTRY15CD === data.spatial_coverage) {
+        coverage = feature.attributes.CTRY15NM;
+        break;
+      }
+    }
 
     data.spatial_coverage_name = coverage;
 
