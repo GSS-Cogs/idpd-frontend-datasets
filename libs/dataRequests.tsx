@@ -24,7 +24,8 @@ const logInfo = (message: string, method: string, url: string) => {
   });
 };
 
-const logError = (message: string, method: string, url: string) => {
+const logError = (message: string, method: string, url: string, error: any) => {
+  const modifiedError = { message: error.message, stack: error.stack };
   console.error({
     event: message,
     http: {
@@ -35,6 +36,7 @@ const logError = (message: string, method: string, url: string) => {
       path: url,
       started_at: moment(new Date()).format("YYYY-MM-DDTHH:mm:ss.SSSZZ"),
     },
+    errors: [modifiedError],
   });
 };
 
@@ -58,9 +60,8 @@ async function getCsvPreview(url: string): Promise<string[][]> {
     const data = lines.map((line: string) => line.split(","));
 
     return data;
-  } catch (error) {
-    logError(`failed fetch data from ${url}`, "GET", url);
-    throw error;
+  } catch (error: any) {
+    throw logError(`failed fetch data from ${url}`, "GET", url, error);
   }
 }
 
@@ -72,9 +73,8 @@ const getDatasetCsv = async (url: string) => {
   try {
     const data = await fetchData(url, "GET", "text/csv");
     return data.text();
-  } catch (error) {
-    logError(`failed fetch data from ${url}`, "GET", url);
-    throw error;
+  } catch (error: any) {
+    throw logError(`failed fetch data from ${url}`, "GET", url, error);
   }
 };
 
@@ -139,8 +139,7 @@ const fetchData = async (
     const response = await fetch(fetchURL, options);
     return handleResponse(response);
   } catch (error) {
-    logError(`failed fetch data from ${url}`, method, url);
-    throw error;
+    throw logError(`failed fetch data from ${url}`, method, url, error);
   }
 };
 
@@ -198,18 +197,22 @@ const getDatasetWithSpatialCoverageInfo = async (id: string) => {
   // this function gets the dataset like normal then adds a new field 'spatial_coverage_name' to it
   // which is the corresponding name of the given coverage code
   // e.g. K02000001 -> United Kingdom
-  const data = await fetchData(`/datasets/${id}`, "GET");
-  const code = data.spatial_coverage;
+  try {
+    const data = await fetchData(`/datasets/${id}`, "GET");
+    const code = data.spatial_coverage;
 
-  const response = await handleResponse(
-    await fetch(`https://findthatpostcode.uk/areas/${code}.json`)
-  );
+    const response = await handleResponse(
+      await fetch(`https://findthatpostcode.uk/areas/${code}.json`)
+    );
 
-  const coverage = response.data.attributes.name;
+    const coverage = response.data.attributes.name;
 
-  data.spatial_coverage_name = coverage;
+    data.spatial_coverage_name = coverage;
 
-  return data;
+    return data;
+  } catch (error: any) {
+    throw logError(`failed fetch data from ${id}`, "GET", id, error);
+  }
 };
 
 const getTopics = async () => {
