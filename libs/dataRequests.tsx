@@ -26,7 +26,7 @@ const logInfo = (message: string, method: string, url: string) => {
 };
 
 const logError = (message: string, method: string, url: string, error: any) => {
-  const modifiedError = { message: error.message, stack: error.stack };
+  const modifiedError = { message: error?.message, stack: error.stack };
   console.error({
     event: message,
     http: {
@@ -62,7 +62,8 @@ async function getCsvPreview(url: string): Promise<string[][]> {
 
     return data;
   } catch (error: any) {
-    throw logError(`failed fetch data from ${url}`, "GET", url, error);
+    logError(`failed fetch data from ${url}`, "GET", url, error);
+    throw error;
   }
 }
 
@@ -75,7 +76,7 @@ const getDatasetCsv = async (url: string) => {
     const data = await fetchData(url, "GET", "text/csv");
     return data.text();
   } catch (error: any) {
-    throw logError(`failed fetch data from ${url}`, "GET", url, error);
+    logError(`failed fetch data from ${url}`, "GET", url, error);
   }
 };
 
@@ -140,7 +141,7 @@ const fetchData = async (
     const response = await fetch(fetchURL, options);
     return handleResponse(response);
   } catch (error) {
-    throw logError(`failed fetch data from ${url}`, method, url, error);
+    logError(`failed fetch data from ${url}`, method, url, error);
   }
 };
 
@@ -220,7 +221,7 @@ const getDatasetWithSpatialCoverageInfo = async (id: string) => {
 
     return data;
   } catch (error: any) {
-    throw logError(`failed fetch data from ${id}`, "GET", id, error);
+    logError(`failed fetch data from ${id}`, "GET", id, error);
   }
 };
 
