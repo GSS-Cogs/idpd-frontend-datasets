@@ -1,14 +1,50 @@
 "use server";
+import moment from "moment";
 import { redirect } from "next/navigation";
 
 const USERNAME = process.env.NEXT_PRIVATE_USERNAME;
 const PASSWORD = process.env.NEXT_PRIVATE_PASSWORD;
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+const BACKEND_PORT = process.env.NEXT_PUBLIC_BACKEND_PORT || "";
+
+const backendUrlSplit = BACKEND_URL?.split("://");
+const scheme = backendUrlSplit?.[0];
+const domain = backendUrlSplit?.[1];
+
+const logInfo = (message: string, method: string, url: string) => {
+  console.info({
+    event: message,
+    http: {
+      method: method,
+      scheme: scheme,
+      host: domain,
+      port: BACKEND_PORT,
+      path: url,
+      started_at: moment(new Date()).format("YYYY-MM-DDTHH:mm:ss.SSSZZ"),
+    },
+  });
+};
+
+const logError = (message: string, method: string, url: string, error: any) => {
+  const modifiedError = { message: error?.message, stack: error.stack };
+  console.error({
+    event: message,
+    http: {
+      method: method,
+      scheme: scheme,
+      host: domain,
+      port: BACKEND_PORT,
+      path: url,
+      started_at: moment(new Date()).format("YYYY-MM-DDTHH:mm:ss.SSSZZ"),
+    },
+    errors: [modifiedError],
+  });
+};
 
 async function getCsvPreview(url: string): Promise<string[][]> {
+  logInfo(`fetching data from ${url}`, "GET", url);
   try {
     const response = await fetchData(url, "GET", "text/csv");
-
     const reader = response.body.getReader();
     let result = await reader.read();
     let csvData = "";
@@ -25,7 +61,8 @@ async function getCsvPreview(url: string): Promise<string[][]> {
     const data = lines.map((line: string) => line.split(","));
 
     return data;
-  } catch (error) {
+  } catch (error: any) {
+    logError(`failed fetch data from ${url}`, "GET", url, error);
     throw error;
   }
 }
@@ -34,12 +71,12 @@ const getDatasetCsv = async (url: string) => {
   /*
     Get full csv data for downloading
   */
+  logInfo(`fetching data from ${url}`, "GET", url);
   try {
     const data = await fetchData(url, "GET", "text/csv");
     return data.text();
-  } catch (error) {
-    console.error("Fetch Error:", error);
-    throw error;
+  } catch (error: any) {
+    logError(`failed fetch data from ${url}`, "GET", url, error);
   }
 };
 
@@ -82,6 +119,7 @@ const fetchData = async (
   method: string,
   mimeType: string = "application/ld+json"
 ): Promise<any> => {
+  logInfo(`fetching data from ${url}`, method, url);
   try {
     const options: RequestInit = {
       method,
@@ -103,8 +141,7 @@ const fetchData = async (
     const response = await fetch(fetchURL, options);
     return handleResponse(response);
   } catch (error) {
-    console.error("Fetch Error:", error);
-    throw error;
+    logError(`failed fetch data from ${url}`, method, url, error);
   }
 };
 
@@ -162,25 +199,30 @@ const getDatasetWithSpatialCoverageInfo = async (id: string) => {
   // this function gets the dataset like normal then adds a new field 'spatial_coverage_name' to it
   // which is the corresponding name of the given coverage code
   // e.g. K02000001 -> United Kingdom
-  const data = await fetchData(`/datasets/${id}`, "GET");
 
-  const geoportalCodes = await handleResponse(
-    await fetch(
-      "https://opendata.arcgis.com/datasets/33a3c8eadd084ac38d20ff3dcfa110ce_0/FeatureServer/0/query?outFields=*&where=1%3D1"
-    )
-  );
+  try {
+    const data = await fetchData(`/datasets/${id}`, "GET");
 
-  let coverage = "UNKNOWN";
-  for (const feature of geoportalCodes.features) {
-    if (feature.attributes.CTRY15CD === data.spatial_coverage) {
-      coverage = feature.attributes.CTRY15NM;
-      break;
+    const geoportalCodes = await handleResponse(
+      await fetch(
+        "https://opendata.arcgis.com/datasets/33a3c8eadd084ac38d20ff3dcfa110ce_0/FeatureServer/0/query?outFields=*&where=1%3D1"
+      )
+    );
+
+    let coverage = "UNKNOWN";
+    for (const feature of geoportalCodes.features) {
+      if (feature.attributes.CTRY15CD === data.spatial_coverage) {
+        coverage = feature.attributes.CTRY15NM;
+        break;
+      }
     }
+
+    data.spatial_coverage_name = coverage;
+
+    return data;
+  } catch (error: any) {
+    logError(`failed fetch data from ${id}`, "GET", id, error);
   }
-
-  data.spatial_coverage_name = coverage;
-
-  return data;
 };
 
 const getTopics = async () => {
