@@ -1,6 +1,62 @@
-export default function Footer({}) {
+import { getTopics } from "../../libs/dataRequests";
+
+const popularItems = [
+  { text: "About the data service", href: "/" },
+  { text: "IDS Hub", href: "https://integrateddataservice.gov.uk/" },
+  {
+    text: "Climate change portal",
+    href: "https://climate-change.data.gov.uk/",
+  },
+  {
+    text: "Violence against women and girls portal",
+    href: "https://vawg.gss-data.org.uk/",
+  },
+];
+
+export default async function Footer() {
+  const topics = await getTopics();
+
+  const getParentTopics = (topics: any[]) => {
+    const filteredTopics = topics.filter(
+      (topic) => topic.parent_topics.length === 0
+    );
+    return filteredTopics;
+  };
+  const parentTopics = getParentTopics(topics.topics);
+
+  const PopularItem = ({ text, href }: { text: string; href: string }) => (
+    <li className="app-footer__popular-item">
+      <a className="govuk-link app-footer__popular-link" href={href}>
+        {href}
+      </a>
+    </li>
+  );
+
   return (
-    <footer className="govuk-footer" role="contentinfo">
+    <footer className="govuk-footer app-footer" role="contentinfo">
+      <div className="app-width-container govuk-grid-row app-footer__container">
+        <div className="govuk-grid-column-two-thirds">
+          <h3 className="govuk-heading-m">Topics</h3>
+          <ul className="govuk-list app-footer__list">
+            {parentTopics.map((item: { title: string; identifier: string }) => (
+              <PopularItem
+                key={item.title}
+                text={item.title}
+                href={item.identifier}
+              />
+            ))}
+          </ul>
+        </div>
+        <div className="govuk-grid-column-one-third">
+          <h3 className="govuk-heading-m">About the data service</h3>
+          <ul className="govuk-list app-footer__about-list">
+            {popularItems.map((item) => (
+              <PopularItem key={item.text} text={item.text} href={item.href} />
+            ))}
+          </ul>
+        </div>
+      </div>
+
       <div className="app-width-container">
         <div className="govuk-footer__meta">
           <div className="govuk-footer__meta-item govuk-footer__meta-item--grow">
