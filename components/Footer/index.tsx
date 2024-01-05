@@ -27,10 +27,15 @@ export default async function Footer() {
   const PopularItem = ({ text, href }: { text: string; href: string }) => (
     <li className="app-footer__popular-item">
       <a className="govuk-link app-footer__popular-link" href={href}>
-        {href}
+        {text}
       </a>
     </li>
   );
+
+  const removeTopicsFromUrl = (url: string) => {
+    const modifiedUrl = url.replace("/topics", "");
+    return modifiedUrl;
+  };
 
   return (
     <footer className="govuk-footer app-footer" role="contentinfo">
@@ -38,11 +43,11 @@ export default async function Footer() {
         <div className="govuk-grid-column-two-thirds">
           <h3 className="govuk-heading-m">Topics</h3>
           <ul className="govuk-list app-footer__list">
-            {parentTopics.map((item: { title: string; identifier: string }) => (
+            {parentTopics.map((item: { title: string; "@id": string }) => (
               <PopularItem
                 key={item.title}
                 text={item.title}
-                href={item.identifier}
+                href={removeTopicsFromUrl(item["@id"])}
               />
             ))}
           </ul>
