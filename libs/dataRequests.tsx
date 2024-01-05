@@ -1,5 +1,5 @@
 "use server";
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 const USERNAME = process.env.NEXT_PRIVATE_USERNAME;
 const PASSWORD = process.env.NEXT_PRIVATE_PASSWORD;
@@ -59,9 +59,8 @@ const getHeaders = (mimeType: string) => {
 const handleResponse = async (response: Response) => {
   if (!response.ok) {
     if (response.status === 404) {
-      redirect("/not-found");
+      return notFound();
     }
-    redirect("/error");
   }
 
   const contentType = response.headers.get("content-type");
