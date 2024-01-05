@@ -29,7 +29,7 @@ export default function RootLayout({
     <html lang="en" className="govuk-template">
       <body className="govuk-template__body">
         <SkipLink />
-        <Header />
+        <Header borderColour="blue-border" />
         {children}
         <Footer />
       </body>
