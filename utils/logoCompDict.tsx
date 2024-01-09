@@ -26,6 +26,7 @@ const createLogoComponent =
             ? ""
             : "app-datasets-list__item-bottom-publisher--no_border"
         }`}
+        style={{backgroundColor: }}
       >
         <Image
           src={src}
