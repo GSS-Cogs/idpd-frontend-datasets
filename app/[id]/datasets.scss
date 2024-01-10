@@ -71,7 +71,7 @@
 }
 
 .app-datasets-list__item-bottom-publisher--no_border {
-  padding: 0px 0px 4px 0px;
+  padding: 0px;
   border-width: 0px;
 }
 
@@ -83,7 +83,6 @@
   margin-bottom: govuk-spacing(0);
   font-family: "Helvetica Neue";
 }
-
 
 .app-datasets__publisher-text {
   @include govuk-font($size: 19);
