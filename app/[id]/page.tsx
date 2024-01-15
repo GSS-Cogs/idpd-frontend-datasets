@@ -24,7 +24,9 @@ export default async function Datasets({ params }: { params: { id: string } }) {
   const metadata = latestVersion.table_schema.columns;
 
   // Get the email from dataset, removing 'mailto:' prefix if present
-  const contactEmail = dataset.contact_point.email ? dataset.contact_point.email.replace(/^mailto:/i, "") : "";
+  const contactEmail = dataset.contact_point.email
+    ? dataset.contact_point.email.replace(/^mailto:/i, "")
+    : "";
 
   // Get a 10 lines preview of the csv asociated with this version
   const csvData = await getCsvPreview(latestVersion.download_url);
@@ -105,7 +107,10 @@ export default async function Datasets({ params }: { params: { id: string } }) {
               </h1>
               <div className="govuk-body">
                 <h3 className="govuk-heading-s">Publisher</h3>
-                <PublisherComponent title={publisher.title} />
+                <PublisherComponent
+                  title={publisher.title}
+                  id={dataset.publisher}
+                />
                 <a className="govuk-link" href="#">
                   View more datasets by this publisher
                 </a>
@@ -165,14 +170,15 @@ export default async function Datasets({ params }: { params: { id: string } }) {
                 <h3 className="govuk-heading-s">Topics and subtopics</h3>
 
                 {dataset.topics.map((url: string) => {
-                  const segments = url.split('/');
+                  const segments = url.split("/");
                   const lastSegment = segments[segments.length - 1];
-                  const displayText = lastSegment.replace(/-/g, ' ');
+                  const displayText = lastSegment.replace(/-/g, " ");
 
                   return (
                     <div className="govuk-body" key={lastSegment}>
-                      <a className="govuk-link" href={'/' + lastSegment}>
-                        {displayText.charAt(0).toUpperCase() + displayText.slice(1)}
+                      <a className="govuk-link" href={"/" + lastSegment}>
+                        {displayText.charAt(0).toUpperCase() +
+                          displayText.slice(1)}
                       </a>
                     </div>
                   );
